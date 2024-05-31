@@ -1,0 +1,43 @@
+BasicGame
+    SpriteSet
+        immovable0 > Immovable img=oryx/grass autotiling=True hidden=True
+        door0 > Door color=GREEN img=oryx/dooropen1
+        movingavatar0 > MovingAvatar img=oryx/dwarf1
+        immovable1 > Immovable img=oryx/spike2
+        immovable2 > Immovable img=oryx/backGrey
+        immovable3 > Immovable img=oryx/fire1
+
+        resource0 > Resource limit=1 value=1 shrinkfactor=0.7
+            resource1 > img=oryx/boots3
+            resource2 > img=oryx/boots2
+
+        immovable4 > Immovable img=oryx/gold1 shrinkfactor=0.5
+        immovable5 > Immovable img=oryx/tree1
+
+    InteractionSet
+
+        movingavatar0 immovable5 > stepBack
+        door0 movingavatar0 > killSprite scoreChange=1
+        movingavatar0 immovable1 > killSprite scoreChange=-1
+        immovable4 movingavatar0 > killSprite scoreChange=1
+
+        resource0 movingavatar0 > collectResource scoreChange=3
+        movingavatar0 immovable2 > killIfHasLess resource=resource1 limit=0
+        movingavatar0 immovable3 > killIfHasLess resource=resource2 limit=0
+
+    TerminationSet
+        Timeout limit=500 win=False
+        SpriteCounter stype=movingavatar0 limit=0 win=False
+        SpriteCounter stype=door0 limit=0 win=True
+
+    LevelMapping
+        e > door0 immovable0
+        t > immovable1 immovable0
+        c > immovable4 immovable0
+        i > resource1 immovable0
+        f > resource2 immovable0
+        _ > immovable2
+        x > immovable3 immovable0
+        . > immovable0
+        A > movingavatar0 immovable0
+        w > immovable5 floor

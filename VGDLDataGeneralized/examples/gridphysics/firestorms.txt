@@ -1,0 +1,29 @@
+BasicGame
+    SpriteSet
+        immovable0   > Immovable img=oryx/backGrey hidden=True
+        randommissile0    > RandomMissile color=ORANGE speed=0.25 img=oryx/fire1
+        spawnpoint0    > SpawnPoint color=RED prob=0.25 img=oryx/fire1 shrinkfactor=0.3 stype=randommissile0 portal=True
+        resource0   > Resource color=BLUE limit=10 value=2 img=newset/water
+        door0  > Door color=GREEN img=oryx/dooropen1
+        movingavatar0  > MovingAvatar healthPoints=1 img=oryx/druid1
+        immovable1    > Immovable color=DARKGRAY img=oryx/wall6
+
+    TerminationSet
+        SpriteCounter stype=door0 win=True
+        SpriteCounter stype=movingavatar0 win=False
+
+    InteractionSet
+        movingavatar0 immovable1   > stepBack
+        door0 movingavatar0 > killSprite
+
+        movingavatar0 resource0 > addHealthPoints killSecond=True
+
+        movingavatar0 randommissile0 > subtractHealthPoints scoreChange=-1
+        randommissile0 resource0 movingavatar0 immovable1 > killSprite
+
+    LevelMapping
+        1 > door0 immovable0
+        0 > spawnpoint0 immovable0
+        h > resource0 immovable0
+        . > immovable0
+        A > immovable0 avatar

@@ -1,0 +1,70 @@
+BasicGame
+    SpriteSet
+
+        immovable0 > Immovable img=oryx/floor3 hidden=True
+        shootavatar0 > ShootAvatar stype=missile0 rotateInPlace=true img=oryx/archer1
+        missile0 > Missile color=BLUE singleton=True img=oryx/orb2 shrinkfactor=0.3
+        spawnpoint0 > SpawnPoint
+            spawnpoint1 > img=newset/lasercannon stype=missile2
+            spawnpoint2 > img=newset/lasercannon_2 stype=missile3
+            spawnpoint3 > img=newset/lasercannon_1 stype=missile4
+            spawnpoint4 > img=newset/lasercannon_3 stype=missile5
+            spawnpoint5 > img=newset/lasercannon_4 stype=missile5
+        missile1 > Missile shrinkfactor=0.5 speed=0.5 color=YELLOW
+            missile2 > orientation=UP img=newset/laser1
+            missile3 > orientation=DOWN img=newset/laser1
+            missile4 > orientation=RIGHT img=newset/laser1_1
+            missile5 > orientation=LEFT img=newset/laser1_1
+
+        immovable1 > Immovable portal=true
+            immovable2 > img=newset/highway3
+            immovable3 > img=newset/street2
+        passive0    > Passive img=newset/block3
+        immovable4 > Immovable img=oryx/spike2
+        immovable5 > Immovable img=oryx/slash1
+
+        spawnpoint6  > SpawnPoint   stype=missile6  cooldown=20 img=spawnpoint6 portal=True
+        missile6 > Missile orientation=DOWN color=RED speed=0.1 img=newset/car_redD
+        immovable6 > Immovable img=oryx/wall3 autotiling=True
+
+
+    LevelMapping
+        A > shootavatar0 immovable0
+        l > spawnpoint4 immovable0
+        r > spawnpoint3 immovable0
+        u > spawnpoint1 immovable0
+        d > spawnpoint2 immovable0
+        p > spawnpoint6 immovable0
+        b > passive0 immovable0
+        h > immovable2 immovable0
+        s > immovable3 immovable0
+        t > immovable4 immovable0
+        . > immovable0
+
+    InteractionSet
+    
+        shootavatar0 immovable6 spawnpoint0 > stepBack
+        missile1 immovable6 EOS > killSprite
+
+        passive0 shootavatar0  > bounceForward
+        passive0 immovable6 passive0 spawnpoint0  > undoAll notStype=missile6
+        missile1 passive0 > killSprite
+
+        spawnpoint2 missile0 > transformTo stype=spawnpoint5
+        spawnpoint4 missile0 > transformTo stype=spawnpoint2
+        spawnpoint1 missile0 > transformTo stype=spawnpoint4
+        spawnpoint3 missile0 > transformTo stype=spawnpoint1
+        spawnpoint5 missile0 > transformTo stype=spawnpoint3
+
+        missile0 spawnpoint0 immovable6 EOS > killSprite
+
+        missile6 shootavatar0 missile1 > attractGaze align=True
+
+        missile6 immovable6 spawnpoint0 > killSprite scoreChange=-1
+        missile6 immovable3 > killSprite scoreChange=1
+        missile6 immovable2 > killSprite scoreChange=4
+        missile6 immovable4 > transformTo stype=immovable5
+
+    TerminationSet
+        MultiSpriteCounter stype1=immovable5 limit=1 win=False
+        Timeout limit=1000 win=True

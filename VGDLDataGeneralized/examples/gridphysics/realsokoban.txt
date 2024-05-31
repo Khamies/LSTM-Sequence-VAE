@@ -1,0 +1,30 @@
+BasicGame key_handler=Pulse square_size=50
+
+    SpriteSet
+        immovable0 > Immovable img=newset/floor2 hidden=True
+        immovable1 > Immovable img=newset/floor2 hidden=True
+        immovable2   > Immovable color=DARKBLUE img=oryx/cspell4
+        movingavatar0 > MovingAvatar img=oryx/knight1
+        passive0 > Passive
+            passive1    >  img=newset/block2
+            passive2  >  img=newset/block1
+        immovable3 > Immovable img=oryx/wall3 autotiling=True
+
+    LevelMapping
+        A > movingavatar0 immovable1
+        o > immovable0 immovable2
+        * > passive1 immovable1
+        . > immovable1
+        w > immovable1 immovable3
+
+    InteractionSet
+        movingavatar0 immovable3 > stepBack
+        passive0 movingavatar0  > bounceForward
+        passive0 immovable3 passive0   > undoAll
+        passive1 immovable2    > transformTo stype=passive2 scoreChange=1
+        passive2 immovable1 > transformTo stype=passive1 scoreChange=-1
+
+    TerminationSet
+        SpriteCounter stype=passive1    limit=0 win=True
+
+

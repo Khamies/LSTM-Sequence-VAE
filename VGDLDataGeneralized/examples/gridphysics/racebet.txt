@@ -1,0 +1,76 @@
+BasicGame square_size=25
+    SpriteSet
+        immovable0 > Immovable img=oryx/backBiege hidden=True
+        door0  > Door color=GREEN img=newset/exit2
+
+        missile0 > Missile orientation=RIGHT
+            missile1 > speed=0.45 img=newset/camel1 frameRate=4
+            missile2 > speed=0.35 img=newset/camel2 frameRate=5
+            missile3 > speed=0.25 img=newset/camel3 frameRate=6
+            missile4 > speed=0.15 img=newset/camel4 frameRate=7
+
+        immovable1 > Immovable singleton=True
+            immovable2 > speed=0.25 img=newset/win1
+            immovable3 > speed=0.25 img=newset/win2
+            immovable4 > speed=0.25 img=newset/win3
+            immovable5 > speed=0.25 img=newset/win4
+
+        immovable6 > Immovable
+            immovable7 > color=LIGHTYELLOW img=newset/floor6
+            immovable8 > color=LIGHTBLUE img=newset/tile1
+            immovable9 > color=LIGHTGREEN img=newset/tile2
+            immovable10 > color=LIGHTORANGE img=newset/tile3
+            immovable11 > color=LIGHTGRAY img=newset/tile4
+
+        movingavatar0 > MovingAvatar speed=1.0 img=newset/man4
+            parent0 >
+            parent1 >
+            parent2 >
+            parent3 >
+            parent4 >
+
+        immovable12 > Immovable img=newset/barrier1
+        immovable13 > Immovable img=oryx/space5
+
+    InteractionSet
+
+        movingavatar0 immovable7 > transformTo stype=parent0
+        movingavatar0 immovable8 > transformTo stype=parent1
+        movingavatar0 immovable9 > transformTo stype=parent2
+        movingavatar0 immovable10 > transformTo stype=parent3
+        movingavatar0 immovable11 > transformTo stype=parent4
+
+        missile1 door0 > transformTo stype=immovable2
+        missile2 door0 > transformTo stype=immovable3
+        missile3 door0 > transformTo stype=immovable4
+        missile4 door0 > transformTo stype=immovable5
+
+        movingavatar0 immovable13 > stepBack
+        missile0 immovable13 immovable12  > stepBack pixelPerfect=True
+
+    LevelMapping
+        A > parent0 immovable7
+        . > immovable7
+        1 > immovable8
+        2 > immovable9
+        3 > immovable10
+        4 > immovable11
+        a > immovable0 missile1
+        b > immovable0 missile2
+        c > immovable0 missile3
+        d > immovable0 missile4
+        g > immovable0 door0
+        + > immovable0
+        - > immovable0 immovable12
+
+
+    TerminationSet
+        MultiSpriteCounter stype1=immovable2 stype2=parent1 limit=2 win=True
+        MultiSpriteCounter stype1=immovable3 stype2=parent2 limit=2 win=True
+        MultiSpriteCounter stype1=immovable4 stype2=parent3 limit=2 win=True
+        MultiSpriteCounter stype1=immovable5 stype2=parent4 limit=2 win=True
+
+        MultiSpriteCounter stype1=immovable2 limit=1 win=False
+        MultiSpriteCounter stype1=immovable3 limit=1 win=False
+        MultiSpriteCounter stype1=immovable4 limit=1 win=False
+        MultiSpriteCounter stype1=immovable5 limit=1 win=False

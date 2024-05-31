@@ -1,0 +1,38 @@
+BasicGame key_handler=Pulse
+    SpriteSet
+        immovable0 > Immovable img=newset/floor6 hidden=True
+        shootavatar0 > ShootAvatar img=newset/man3 frameRate=8 stype=flicker0
+        immovable1 > Immovable
+            parent0 >
+            parent1 > img=oryx/bush3
+            parent2 > img=oryx/bush1
+            parent3 > img=oryx/bush2
+            parent4 > color=RED
+            parent5 > color=BLUE
+
+        flicker0 > Flicker img=oryx/slime1 shrinkfactor=0.5 singleton=True
+
+        immovable2 > Immovable color=BLACK img=newset/floor4
+
+
+    LevelMapping
+        . > immovable0
+        A > shootavatar0 immovable0
+        f > parent0 immovable0
+
+    InteractionSet
+        shootavatar0 immovable2 EOS > stepBack
+
+        parent0 TIME > transformTo stype=parent1
+        parent3 TIME > transformTo stype=parent4 timer=210 repeating=True  scoreChange=-10
+        parent2 TIME > transformTo stype=parent3 timer=160 repeating=True
+        parent1 TIME > transformTo stype=parent2 timer=100 repeating=True
+
+        parent1 flicker0 > transformTo stype=parent5  scoreChange=-5 killSecond=True
+        parent2 flicker0 > transformTo  stype=parent1 scoreChange=5 killSecond=True
+        parent3 flicker0 > transformTo  stype=parent2 scoreChange=2 killSecond=True
+
+    TerminationSet
+        SpriteCounterMore stype=parent4 limit=1 win=False
+        SpriteCounterMore stype=parent5 limit=1 win=False
+        Timeout limit=1500 win=True

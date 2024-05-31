@@ -1,0 +1,134 @@
+BasicGame
+  SpriteSet
+    immovable0 > Immovable randomtiling=0.9 img=oryx/floor3 hidden=True
+    immovable1 > Immovable invisible=True hidden=True
+
+    door0  > Door color=GREEN img=oryx/doorclosed1
+
+    immovable2 > Immovable
+        immovable3 > orientation=DOWN  color=RED img=oryx/bookDown
+        immovable4 > orientation=UP  color=ORANGE img=oryx/bookUp
+
+    immovable5 > Immovable color=GREEN img=oryx/floorTileOrange invisible=True hidden=True
+        parent0 >
+        parent1 >
+        parent2 >
+        parent3 >
+
+    orientedflicker0 > OrientedFlicker limit=5 singleton=True img=oryx/slash1
+
+
+    parent4 >
+      shootavatar0  > ShootAvatar stype=orientedflicker0 frameRate=8 healthPoints=20 img=oryx/swordman1
+      missileavatar0 > MissileAvatar speed=1.0 img=oryx/bat1
+         missileavatar1  > orientation=UP color=RED
+         missileavatar2  > orientation=DOWN color=ORANGE
+
+    parent5 >
+      randomnpc0 > RandomNPC cooldown=2 cons=2 img=oryx/guard1
+      randomnpc1 > RandomNPC cooldown=2 cons=2 invisible=True hidden=True
+
+      randomnpc2 > RandomNPC cooldown=2 cons=3 img=oryx/guard1
+      randomnpc3 > RandomNPC cooldown=2 cons=3 invisible=True hidden=True
+
+      randomnpc4 > RandomNPC cooldown=2 cons=6 img=oryx/guard1
+      randomnpc5 > RandomNPC cooldown=2 cons=6 invisible=True hidden=True
+
+
+    immovable6 > Immovable img=oryx/tombstone1
+      parent6 >
+      parent7 > invisible=True hidden=True
+      parent8 >
+      parent9 > invisible=True hidden=True
+      parent10 >
+      parent11 > invisible=True hidden=True
+
+
+    immovable7 > Immovable autotiling=true img=oryx/wall3
+
+    resource0 > Resource limit=10
+    passive0 > Passive img=oryx/gold2
+      parent12 >
+      parent13 > invisible=True hidden=True
+      parent14 >
+      parent15 > invisible=True hidden=True
+      parent16 >
+      parent17 > invisible=True hidden=True
+
+
+  LevelMapping
+    A > shootavatar0 immovable0
+    e > immovable0 door0
+    w > immovable7
+    . > immovable0
+
+    u > immovable4 immovable0
+    d > immovable3 immovable0
+    h > immovable1 immovable0
+
+    x > randomnpc1 immovable0
+    y > randomnpc3 immovable0
+    z > randomnpc5 immovable0
+
+    + > parent7 immovable0
+    - > parent9 immovable0
+    / > parent11 immovable0
+
+    1 > parent13 immovable0
+    2 > parent15 immovable0
+    3 > parent17 immovable0
+
+    g > parent0 immovable0
+    f > parent1 immovable0
+    s > parent2 immovable0
+    t > parent3 immovable0
+
+  InteractionSet
+    shootavatar0 immovable7  > stepBack
+    parent5 immovable7 immovable1 immovable6 parent5 > stepBack
+    parent5 orientedflicker0 > killSprite scoreChange=2
+
+    parent4 parent5 > subtractHealthPoints
+    parent4 immovable6 > killSprite scoreChange=-1
+
+    shootavatar0 immovable2 > attractGaze prob=1 align=True
+    shootavatar0 immovable4 > transformTo stype=missileavatar1
+    shootavatar0 immovable3 > transformTo stype=missileavatar2
+
+    missileavatar0 immovable5 > transformTo stype=shootavatar0
+
+    shootavatar0 parent0 > transformToAll stype=randomnpc0 stypeTo=randomnpc1
+    shootavatar0 parent0 > transformToAll stype=parent6 stypeTo=parent7
+    shootavatar0 parent0 > transformToAll stype=parent12 stypeTo=parent13
+
+    shootavatar0 parent1 > transformToAll stype=randomnpc1 stypeTo=randomnpc0
+    shootavatar0 parent1 > transformToAll stype=randomnpc2 stypeTo=randomnpc3
+    shootavatar0 parent1 > transformToAll stype=parent7 stypeTo=parent6
+    shootavatar0 parent1 > transformToAll stype=parent8 stypeTo=parent9
+    shootavatar0 parent1 > transformToAll stype=parent13 stypeTo=parent12
+    shootavatar0 parent1 > transformToAll stype=parent14 stypeTo=parent15
+
+    shootavatar0 parent2 > transformToAll stype=randomnpc3 stypeTo=randomnpc2
+    shootavatar0 parent2 > transformToAll stype=randomnpc0 stypeTo=randomnpc1
+    shootavatar0 parent2 > transformToAll stype=randomnpc4 stypeTo=randomnpc5
+    shootavatar0 parent2 > transformToAll stype=parent9 stypeTo=parent8
+    shootavatar0 parent2 > transformToAll stype=parent6 stypeTo=parent7
+    shootavatar0 parent2 > transformToAll stype=parent10 stypeTo=parent11
+    shootavatar0 parent2 > transformToAll stype=parent15 stypeTo=parent14
+    shootavatar0 parent2 > transformToAll stype=parent12 stypeTo=parent13
+    shootavatar0 parent2 > transformToAll stype=parent16 stypeTo=parent17
+
+    shootavatar0 parent3 > transformToAll stype=randomnpc5 stypeTo=randomnpc4
+    shootavatar0 parent3 > transformToAll stype=randomnpc2 stypeTo=randomnpc3
+    shootavatar0 parent3 > transformToAll stype=parent11 stypeTo=parent10
+    shootavatar0 parent3 > transformToAll stype=parent8 stypeTo=parent9
+    shootavatar0 parent3 > transformToAll stype=parent17 stypeTo=parent16
+    shootavatar0 parent3 > transformToAll stype=parent14 stypeTo=parent15
+
+    shootavatar0 passive0 > changeResource resource=resource0 value=1 scoreChange=1 killResource=True
+    door0 shootavatar0 > killIfOtherHasMore resource=resource0 limit=10 scoreChange=500
+
+
+  TerminationSet
+    SpriteCounter stype=door0   win=True
+    SpriteCounter stype=parent4 win=False

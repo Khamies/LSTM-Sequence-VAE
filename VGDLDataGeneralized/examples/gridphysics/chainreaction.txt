@@ -1,0 +1,76 @@
+BasicGame key_handler=Pulse
+    SpriteSet
+        immovable0 > Immovable img=oryx/backLBrown
+        immovable1   > Immovable color=DARKBLUE img=newset/hole1 portal=true
+        immovable2 > Immovable img=newset/exit2 portal=true
+
+        orientedavatar0 > OrientedAvatar rotateInPlace=false img=oryx/yeti2
+        passive0    > Passive img=newset/block2
+        missile0 > Missile
+            missile1 > img=newset/blockR2
+                missile2 > speed=0.0
+                missile3 > speed=1.0
+            parent0 > img=newset/block3
+                parent1 > speed=0.0
+                parent2 > speed=0.0
+                parent3 > speed=1.0
+        immovable3 > Immovable img=oryx/dirtwall autotiling=True
+
+    LevelMapping
+        A > orientedavatar0 immovable0
+        b > passive0 immovable0
+        c > parent1 immovable0
+        m > missile2 immovable0
+        0 > immovable1 immovable0
+        g > immovable2 immovable0
+        . > immovable0
+
+
+    InteractionSet
+
+        missile2 orientedavatar0  > transformTo stype=missile3
+        missile3 orientedavatar0 > attractGaze
+        orientedavatar0 parent1 missile2 > stepBack
+    
+        orientedavatar0 immovable3 > stepBack
+        passive0 orientedavatar0  > bounceForward
+        passive0 immovable3 passive0 immovable1 immovable2   > undoAll
+        passive0 missile0 > stepBack
+        
+        orientedavatar0 immovable3 > stepBack
+
+        missile3 immovable3 > transformTo stype=missile2
+        missile2 immovable3 > undoAll
+
+        missile3 passive0 > transformTo stype=missile2
+        missile2 passive0 > undoAll
+
+        # The following 9 lines are insane. Gave me a headache, truly. Need a better way of doing this in the future.
+        parent1 parent3 > attractGaze
+        parent3 parent1 > transformTo stype=parent2
+        parent1 parent2 > transformTo stype=parent3
+        parent2 parent1 > transformTo stype=parent1
+        parent1 normalBoulder > stepBack
+
+        parent1 missile3 > attractGaze
+        missile3 parent1 > transformTo stype=missile2
+        parent1 missile2 > transformTo stype=parent3
+        missile2 parent1 > stepBack
+
+
+        parent3 immovable3 > transformTo stype=parent1
+        parent1 immovable3 > stepBack
+        parent3 passive0 > transformTo stype=parent1
+        parent1 passive0 > stepBack
+
+        missile3 immovable1 immovable2 > killSprite scoreChange=-10
+        parent3 immovable1 > killSprite scoreChange=-5
+        parent3 immovable2 > killSprite scoreChange=2
+
+        orientedavatar0 immovable1 > killSprite scoreChange=-10
+
+    TerminationSet
+        SpriteCounter stype=orientedavatar0    limit=0 win=False
+        SpriteCounter stype=parent0 limit=0 win=True
+        SpriteCounter stype=missile1    limit=0 win=False
+        Timeout limit=1500 win=False

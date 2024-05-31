@@ -1,0 +1,45 @@
+BasicGame square_size=30 key_handler=Pulse
+    SpriteSet
+
+        immovable0 > Immovable img=newset/street3 hidden=True
+        resource0 > Resource color=BLUE limit=10
+        missile0 > Missile img=oryx/slime1 speed=1.0 shrinkfactor=0.8
+        immovable1 > Immovable img=newset/city1
+        immovable2 > Immovable img=newset/hydrant
+
+        immovable3 > img=oryx/fire1
+            spawnpoint0 > SpawnPoint stype=spreader0 prob=0.01 img=newset/city1_fire
+            spreader0 > Spreader color=ORANGE spreadprob=0.6 stype=immovable4
+            immovable4 > Immovable
+        shootavatar0  > ShootAvatar ammo=resource0 stype=missile0 healthPoints=10 img=newset/fireman
+
+        immovable5 > Immovable img=oryx/wall1
+
+    LevelMapping
+        b > immovable1 immovable0
+        A > shootavatar0 immovable0
+        e > immovable2 immovable0
+        f > spawnpoint0 immovable0
+        . > immovable0
+
+
+    InteractionSet
+        shootavatar0 immovable5 immovable1 > stepBack
+
+        immovable1 immovable4 > killSprite scoreChange=-1
+        immovable4 immovable1 > transformTo stype=spawnpoint0
+
+        immovable3 immovable5 > killSprite
+        immovable3 missile0 > killSprite scoreChange=2
+        missile0 immovable3 immovable1 immovable5 > killSprite
+
+        shootavatar0 immovable3 > subtractHealthPoints
+
+        immovable4 immovable0 > killSprite
+
+        shootavatar0 immovable2 > changeResource resource=resource0 value=2
+
+    TerminationSet
+        SpriteCounter stype=shootavatar0 limit=0 win=False
+        SpriteCounter stype=immovable3 limit=0 win=True
+        Timeout limit=1500 win=False

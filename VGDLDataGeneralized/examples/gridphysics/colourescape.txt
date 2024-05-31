@@ -1,0 +1,72 @@
+BasicGame key_handler=Pulse
+    SpriteSet
+        immovable0 > Immovable img=oryx/floor3 hidden=True
+        door0 > Door color=GREEN img=oryx/doorclosed1
+        immovable1   > Immovable color=DARKBLUE img=oryx/spike2 portal=True
+
+        passive0   > Passive  shrinkfactor=0.8
+            passive1 > img=newset/block2
+            passive2 > img=newset/blockB
+            passive3 > img=newset/blockR
+            passive4 > img=newset/blockG
+
+        immovable2 > Immovable
+             immovable3 > img=newset/floor6
+             immovable4 > img=newset/tile1
+             immovable5 > img=newset/tile3
+             immovable6 > img=newset/tile4
+
+        movingavatar0 > MovingAvatar
+             movingavatar1 > img=newset/girl3
+             movingavatar2 > img=newset/girl2
+             movingavatar3 > img=newset/girl5
+             movingavatar4 > img=newset/girl1
+
+        immovable7 > Immovable img=oryx/wall3 autotiling=True
+
+    LevelMapping
+            A > movingavatar1 immovable0
+            x > door0 immovable0
+            h > immovable1 immovable0
+
+            1 > passive1 immovable0
+            2 > passive2 immovable0
+            3 > passive3 immovable0
+            4 > passive4 immovable0
+
+            a > immovable3 immovable0
+            b > immovable4 immovable0
+            c > immovable5 immovable0
+            d > immovable6 immovable0
+
+            . > immovable0
+
+    InteractionSet
+        movingavatar0 immovable7 > stepBack
+
+        passive4 movingavatar4 > bounceForward
+        passive4 movingavatar2 movingavatar3 movingavatar1 > undoAll
+
+        passive3 movingavatar3 > bounceForward
+        passive3 movingavatar2 movingavatar4 movingavatar1 > undoAll
+
+        passive2 movingavatar2 > bounceForward
+        passive2 movingavatar3 movingavatar4 movingavatar1 > undoAll
+
+        passive1 movingavatar1  > bounceForward
+        passive1 movingavatar3 movingavatar4 movingavatar2 > undoAll
+
+        passive0 immovable7 immovable2 door0 passive0 > undoAll
+        movingavatar0 immovable1 > killSprite scoreChange=-1
+        door0 movingavatar0 > killSprite scoreChange=1
+        passive0 immovable1    > killSprite
+
+        movingavatar0 immovable3 > transformTo stype=movingavatar1
+        movingavatar0 immovable5 > transformTo stype=movingavatar3
+        movingavatar0 immovable4 > transformTo stype=movingavatar2
+        movingavatar0 immovable6 > transformTo stype=movingavatar4
+
+    TerminationSet
+        SpriteCounter stype=movingavatar0 limit=0 win=False
+        SpriteCounter stype=door0 limit=0 win=True
+        Timeout limit=1500 win=False

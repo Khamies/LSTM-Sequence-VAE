@@ -1,0 +1,50 @@
+BasicGame square_size=30
+    SpriteSet
+        immovable0 > Immovable hidden=True img=oryx/backlBrown
+        immovable1 > Immovable
+            immovable2 > color=GOLD img=oryx/gold2 shrinkfactor=0.5
+            immovable3  > color=GREEN shrinkfactor=0.6 img=oryx/diamond1
+        orientedflicker0 > OrientedFlicker limit=2 color=LIGHTGRAY img=oryx/pickaxe shrinkfactor=0.6
+        orientedflicker1 > singleton=True
+            immovable4 > Immovable speed=0.0 img=oryx/planet
+            missile0 > Missile speed=0.2 img=oryx/planet
+        parent0 >
+            shootavatar0  > ShootAvatar stype=orientedflicker0 img=oryx/axeman1
+            missile1 > Missile color=RED orientation=DOWN cooldown=4 img=oryx/scorpion3
+            missile2 > Missile orientation=DOWN color=YELLOW speed=0.5 img=oryx/planet
+        spawnpoint0 > SpawnPoint total=5 cooldown=200 stype=missile1 img=newset/hole1 portal=True
+        immovable5 > Immovable img=oryx/dirtwall autotiling=True
+
+    LevelMapping
+        0 > immovable3 immovable0
+        1 > immovable2 immovable0
+        e > spawnpoint0 immovable0
+        m > missile1 immovable0
+        . > immovable0
+        A > shootavatar0 immovable0
+        w > immovable5 immovable0
+
+    TerminationSet
+        SpriteCounter  stype=shootavatar0  limit=0 win=False
+        MultiSpriteCounter  stype1=immovable1 stype2=missile1 limit=0 win=True
+
+    InteractionSet
+
+        immovable2 orientedflicker0 missile0 > transformTo stype=missile2
+        immovable3  shootavatar0  > killSprite scoreChange=1
+
+        missile0 immovable5 > transformToAll stype=missile0 stypeTo=immovable4
+        immovable4 immovable5 > stepBack
+        shootavatar0 immovable2  > stepBack
+        shootavatar0 missile1  > killSprite scoreChange=-1
+        missile1 immovable5 EOS immovable4 > flipDirection
+        missile1 missile0 > killSprite scoreChange=2
+        missile2 immovable5 > killSprite
+
+        orientedflicker0 shovel > transformTo stype=missile0
+        EOS missile0 immovable4 > stepBack
+        missile0 shootavatar0  > killSprite
+        immovable4 shootavatar0  > killSprite
+        immovable5 orientedflicker0  > killSprite
+        parent0 immovable5 EOS immovable4 > stepBack
+        parent0 missile2  > killSprite

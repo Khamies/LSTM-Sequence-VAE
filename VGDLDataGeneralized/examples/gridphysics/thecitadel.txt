@@ -1,0 +1,44 @@
+#The Citadel: http://www.mobygames.com/game/citadel__
+
+BasicGame square_size=40 key_handler=Pulse
+    SpriteSet
+        immovable0 > Immovable img=oryx/backLBrown hidden=True
+        immovable1   > Immovable color=DARKBLUE img=newset/hole5
+        immovable2   > Immovable color=DARKBLUE img=newset/hole4
+        movingavatar0 > MovingAvatar img=oryx/spelunky_0
+        immovable3 > Immovable img=oryx/door2
+        passive0    > Passive img=oryx/wall2 shrinkfactor=0.8
+        passive1    > Passive img=oryx/barrel1 shrinkfactor=0.8
+        immovable4 > Immovable img=oryx/dirtwall autotiling=true
+    LevelMapping
+        0 > immovable0 immovable2
+        1 > immovable0 immovable1
+        b > immovable0 passive1
+        c > immovable0 passive0
+        g > immovable0 immovable3
+        . > immovable0
+        A > immovable0 movingavatar0
+        w > immovable4
+    InteractionSet
+
+
+        movingavatar0 immovable4 immovable1 immovable2 > stepBack
+
+        passive1 movingavatar0  > bounceForward
+        passive1 boulder passive0 immovable4 immovable3 > undoAll
+
+        passive1 immovable2 > killBoth scoreChange=1
+        passive1 immovable1 > killSprite
+
+        passive0 movingavatar0  > bounceForward
+        passive0 crate  > bounceForward repeat=10
+
+        passive0 immovable4 passive1 immovable3 immovable2 > undoAll
+
+        passive0 immovable1 > killBoth scoreChange=1
+        immovable3 movingavatar0 > killSprite scoreChange=5
+
+
+    TerminationSet
+        SpriteCounter stype=immovable3 limit=0 win=True
+        SpriteCounter stype=movingavatar0 limit=0 win=False

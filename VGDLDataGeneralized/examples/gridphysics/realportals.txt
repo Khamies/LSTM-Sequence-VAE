@@ -1,0 +1,97 @@
+BasicGame key_handler=Pulse
+    SpriteSet
+        immovable0 > Immovable img=oryx/backOBrown
+
+        immovable1 > Immovable color=BLUE img=newset/water
+        immovable2 > Immovable color=RED img=oryx/staff3 shrinkfactor=0.6
+        immovable3 > Immovable color=RED img=oryx/staff2 shrinkfactor=0.6
+        resource0 > Resource color=BLUE value=10000 limit=10000 img=spaceship
+
+        resource1 > Resource shrinkfactor=0.8 color=RED img=oryx/key2
+        immovable4 > Immovable img=oryx/doorclosed1
+
+        portal0 > Portal stype=immovable5 color=LIGHTBLUE img=oryx/circleEffect1
+        immovable5  > Immovable color=BROWN img=oryx/explosion2
+        immovable6 > Immovable color=GREEN img=oryx/door2
+
+        missile0 > Missile color=YELLOW speed=0.5 shrinkfactor=0.3
+            missile1 > img=oryx/bullet1 singleton=True
+            missile2 > img=oryx/bullet2 singleton=True
+
+        missile3 > Missile img=oryx/potion1
+
+        parent0 >
+            passive0 > Passive img=oryx/potion1
+            shootavatar0 > ShootAvatar ammo=resource0 cooldown=2
+                shootavatar1 > stype=missile1 img=oryx/necromancer1
+                shootavatar2 > stype=missile2 img=oryx/mage1
+
+        immovable7 > Immovable img=oryx/dirtwall autotiling=True
+
+    LevelMapping
+        g > immovable0 immovable6
+        . > immovable0 immovable1
+        A > immovable0 shootavatar1 resource0
+        t > immovable0 immovable2
+        p > immovable0 immovable3
+        k > immovable0 resource1
+        l > immovable0 immovable4
+        o > immovable0 passive0
+        + > immovable0
+        w > immovable0 immovable7
+
+    TerminationSet
+        SpriteCounter stype=immovable6   limit=0 win=True
+        SpriteCounter stype=shootavatar0 limit=0 win=False
+
+    InteractionSet
+
+        missile3 passive0 > transformTo stype=passive0
+        passive0 boulder > stepBack
+
+        immovable6   shootavatar0    > killSprite scoreChange=5
+        shootavatar0 immovable5 > stepBack
+        shootavatar0 portal0 > teleportToExit scoreChange=1
+        shootavatar0 immovable1       > killSprite
+        resource0 shootavatar0   > collectResource
+
+        shootavatar0 resource1 > changeResource resource=resource1 value=1
+        resource1 shootavatar0 > killSprite
+        immovable4 shootavatar0 > killIfOtherHasMore resource=resource1 limit=1
+        shootavatar0 immovable4 > stepBack
+        parent0 immovable4 immovable7 > stepBack
+
+        shootavatar1 immovable2 > transformTo stype=shootavatar2
+        shootavatar2 immovable3 > transformTo stype=shootavatar1
+
+        #Avatar and Boulder
+        passive0 shootavatar0 > transformTo stype=missile3
+        missile3 shootavatar0 > attractGaze
+        shootavatar0 passive0 missile3 > stepBack
+
+        #moving passive0 stops after hitting:
+        missile3 immovable7 > transformTo stype=passive0
+        passive0 immovable7 > undoAll
+        missile3 resource1 > transformTo stype=passive0
+        passive0 resource1 > undoAll
+        missile3 immovable4 > transformTo stype=passive0
+        passive0 immovable4 > undoAll
+        missile3 immovable2 > transformTo stype=passive0
+        passive0 immovable2 > undoAll
+        missile3 immovable3 > transformTo stype=passive0
+        passive0 immovable3 > undoAll
+
+        immovable1 missile3 > killBoth
+
+        missile3 portal0 > teleportToExit
+
+
+        #Missiles - order is important.
+        missile0 portal0 > teleportToExit
+        missile0 immovable5 > attractGaze
+        EOS missile0 missile3 parent0  > stepBack
+
+        immovable7 missile1 > transformToSingleton stype=portal0 stype_other=immovable7
+        immovable7 missile2 > transformToSingleton stype=immovable5 stype_other=immovable7 takeOrientation=True
+
+        missile0 immovable6 immovable7 > killSprite

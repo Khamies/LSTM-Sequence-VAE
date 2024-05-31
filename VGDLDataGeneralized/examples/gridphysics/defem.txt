@@ -1,0 +1,48 @@
+BasicGame
+    SpriteSet
+        immovable0 > Immovable hidden=True img=oryx/backLBrown
+        passive0 > Passive invisible=TRUE hidden=TRUE
+        movingavatar0 > MovingAvatar img=oryx/axeman1
+        randommissile0 > RandomMissile img=oryx/axe1 shrinkfactor=0.5
+
+        parent0 >
+            parent1   >
+                randomnpc0 > RandomNPC cooldown=5 img=oryx/freak1
+                chaser0  > Chaser cooldown=5 stype=movingavatar0 img=oryx/freak2
+                missile0   > Missile cooldown=5 img=oryx/freak3
+
+            parent2 >
+                spawnpoint0 > SpawnPoint stype=randomnpc0 total=10 cooldown=20 img=newset/hole1
+                spawnpoint1  > SpawnPoint stype=chaser0 total=10 cooldown=40 img=newset/hole5
+
+            spawnpoint2 > SpawnPoint stype=missile0 total=5 cooldown=30 img=newset/hole4
+                spawnpoint3  > orientation=RIGHT
+                spawnpoint4  > orientation=LEFT
+                spawnpoint5  > orientation=UP
+                spawnpoint6  > orientation=DOWN
+
+    TerminationSet
+        SpriteCounter stype=movingavatar0 limit=0 win=False
+        SpriteCounter stype=parent1 limit=0 win=True
+
+    InteractionSet
+
+        passive0 movingavatar0      > spawn stype=randommissile0 prob=0.5
+        parent1 randommissile0       > killSprite scoreChange=1
+        movingavatar0 parent1       > killSprite
+        EOS movingavatar0 passive0  > stepBack
+        missile0 EOS       > reverseDirection
+        randomnpc0 EOS    > stepBack
+        chaser0 EOS     > stepBack
+        randommissile0 parent1 EOS   > killSprite
+
+
+    LevelMapping
+        a > movingavatar0 passive0 immovable0
+        r > spawnpoint0 passive0 immovable0
+        c > spawnpoint1 passive0 immovable0
+        z > spawnpoint3 passive0 immovable0
+        x > spawnpoint4 passive0 immovable0
+        f > spawnpoint6 passive0 immovable0
+        v > spawnpoint5 passive0 immovable0
+        . > passive0 floor

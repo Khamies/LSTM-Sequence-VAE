@@ -1,0 +1,83 @@
+BasicGame square_size=24
+    SpriteSet
+        immovable0 > Immovable img=oryx/backGrey hidden=True
+        door0  > Door color=GREEN img=oryx/dooropen1
+        shootavatar0 > ShootAvatar stype=immovable1 img=oryx/spelunky frameRate=8
+        parent0 >
+            randomnpc0 > RandomNPC cooldown=2 cons=6 img=oryx/bat1
+            randomnpc1 > RandomNPC cooldown=4 cons=8 img=oryx/spider2
+            randomnpc2 > RandomNPC cooldown=8 cons=12 img=oryx/scorpion1
+        parent1 >
+            immovable1 > Immovable img=newset/bomb
+            immovable2 > Immovable img=newset/bomb
+            immovable3 > Immovable img=newset/bomb
+            immovable4 > Immovable img=newset/bomb
+            immovable5 > Immovable img=newset/bomb
+            immovable6 > Immovable img=newset/bomb
+            immovable7 > Immovable img=newset/bomb
+            immovable8 > Immovable img=newset/bomb
+            immovable9 > Immovable img=newset/bomb
+            immovable10 > Immovable img=newset/bomb
+            immovable11 > Immovable img=newset/bomb
+        orientedflicker0 > OrientedFlicker limit=5 speed=0.5
+            orientedflicker1 > orientation=LEFT singleton=true img=oryx/fireleft1
+            orientedflicker2 > orientation=RIGHT singleton=true img=oryx/fireright1
+            orientedflicker3 > orientation=UP singleton=true img=oryx/fireup1
+            orientedflicker4 > orientation=DOWN singleton=true img=oryx/firedown1
+        immovable12 > Immovable img=oryx/wall1
+        immovable13 > Immovable img=newset/block3
+
+    InteractionSet
+        shootavatar0 immovable12 > stepBack
+        shootavatar0 immovable13 > stepBack
+        shootavatar0 parent1 > stepBack
+        parent0 immovable12 > stepBack
+        parent0 immovable13 > stepBack
+        parent0 parent1 > stepBack
+
+        parent0 orientedflicker0 > killSprite scoreChange=5
+        immovable13 orientedflicker0 > killBoth scoreChange=1
+        orientedflicker0 immovable12 > killSprite
+        door0 shootavatar0 > killSprite scoreChange=10
+        shootavatar0 orientedflicker0 > killSprite
+        shootavatar0 parent0 > killSprite
+        immovable1 immovable12 > killSprite
+        immovable1 immovable13 > killSprite
+
+        immovable10 immovable0 > spawn stype=immovable11
+        immovable10 immovable0 > killSprite
+        immovable9 immovable0 > spawn stype=immovable10
+        immovable9 immovable0 > killSprite
+        immovable8 immovable0 > spawn stype=immovable9
+        immovable8 immovable0 > killSprite
+        immovable7 immovable0 > spawn stype=immovable8
+        immovable7 immovable0 > killSprite
+        immovable6 immovable0 > spawn stype=immovable7
+        immovable6 immovable0 > killSprite
+        immovable5 immovable0 > spawn stype=immovable6
+        immovable5 immovable0 > killSprite
+        immovable4 immovable0 > spawn stype=immovable5
+        immovable4 immovable0 > killSprite
+        immovable3 immovable0 > spawn stype=immovable4
+        immovable3 immovable0 > killSprite
+        immovable2 immovable0 > spawn stype=immovable3
+        immovable2 immovable0 > killSprite
+        immovable1 immovable0 > spawn stype=immovable2
+        immovable1 immovable0 > killSprite
+        immovable11 immovable0 > spawn stype=orientedflicker1
+        orientedflicker1 immovable11 > spawn stype=orientedflicker2
+        orientedflicker2 immovable11 > spawn stype=orientedflicker3
+        orientedflicker3 immovable11 > spawn stype=orientedflicker4
+        immovable11 orientedflicker4 > killSprite
+    LevelMapping
+        A > immovable0 shootavatar0
+        . > immovable0
+        w > immovable12
+        q > immovable0 immovable13
+        b > immovable0 randomnpc0
+        s > immovable0 randomnpc1
+        c > immovable0 randomnpc2
+        g > immovable0 door0 immovable13
+    TerminationSet
+        SpriteCounter stype=shootavatar0 limit=0 win=False
+        SpriteCounter stype=door0 limit=0 win=True

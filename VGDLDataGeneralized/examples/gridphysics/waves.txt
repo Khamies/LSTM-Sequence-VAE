@@ -1,0 +1,56 @@
+BasicGame
+    SpriteSet
+
+        immovable0 > Immovable img=oryx/space1 hidden=True
+        immovable1 > Immovable img=oryx/planet
+
+        missile0 > Missile
+            missile1 > orientation=LEFT speed=0.95 color=BLUE img=oryx/orb3
+            missile2  > orientation=RIGHT color=BLUE speed=1.0 img=oryx/orb1 shrinkfactor=0.5
+            missile3 > orientation=LEFT speed=0.3 color=RED shrinkfactor=0.75 img=newset/laser2_1
+
+        parent0  >
+            spawnpoint0  > SpawnPoint   stype=bomber0  cooldown=10 prob=0.05 img=newset/whirlpool2 portal=True
+            spawnpoint1  > SpawnPoint   stype=missile1  cooldown=10 prob=0.2 img=newset/whirlpool1 portal=True
+
+        resource0 > Resource color=GOLD limit=4 img=oryx/shield2
+
+        shootavatar0  > ShootAvatar color=YELLOW stype=missile2 speed=1.0 img=oryx/spaceship1 rotateInPlace=False
+        bomber0 > Bomber color=BROWN img=oryx/alien3 speed=0.1 orientation=LEFT stype=missile3 prob=0.01
+    
+    LevelMapping
+        1 > immovable0 spawnpoint0
+        2 > immovable0 spawnpoint1
+        A > immovable0 shootavatar0 resource0
+        s > immovable0 immovable1
+        . > immovable0
+
+    TerminationSet
+        SpriteCounter      stype=shootavatar0             limit=0 win=False
+        Timeout limit=1000 win=True
+        
+    InteractionSet
+        shootavatar0  EOS  > stepBack
+        bomber0   EOS  > killSprite
+        missile0 EOS  > killSprite
+
+        bomber0 missile2 > killBoth scoreChange=2
+
+        missile2 missile3 > transformTo stype=resource0 killSecond=True
+
+        shootavatar0 resource0 > changeResource resource=resource0 value=1 killResource=True
+
+        shootavatar0 missile1 > killIfHasLess resource=resource0 limit=0
+        shootavatar0 missile1 > changeResource resource=resource0 value=-1 killResource=True
+
+        shootavatar0 bomber0 > killIfHasLess resource=resource0 limit=0
+        shootavatar0 bomber0 > changeResource resource=resource0 value=-1 killResource=True
+
+        shootavatar0 missile3 > killIfHasLess resource=resource0 limit=0
+        shootavatar0 missile3 > changeResource resource=resource0 value=-1 killResource=True
+
+        immovable1 missile2 missile3 > killSprite
+        missile1 immovable1 > killSprite
+        bomber0 immovable1 > killSprite
+        missile3 immovable1 > killSprite
+        shootavatar0 immovable1 > stepBack

@@ -1,0 +1,99 @@
+BasicGame square_size=30
+    SpriteSet
+        immovable0 > Immovable img=oryx/backGrey hidden=True
+
+        passive0 > Passive color=BLUE portal=True
+            passive1 > img=newset/hole1
+            passive2 > img=newset/hole4
+
+        parent0 >
+            parent1 >
+                immovable1 > Immovable img=oryx/wall6
+                immovable2 > Immovable invisible=True hidden=True
+
+            parent2 >
+                immovable3 > Immovable img=oryx/wall5
+                immovable4 > Immovable invisible=True hidden=True
+
+
+        parent3 > speed=0.4
+            parent4 >
+                randomnpc0 > RandomNPC cooldown=2 cons=2 img=oryx/guard1
+                randomnpc1 > RandomNPC cooldown=2 cons=2 invisible=True hidden=True
+
+            parent8 >
+                randomnpc2 > RandomNPC cooldown=2 cons=3 img=oryx/freak1
+                randomnpc3 > RandomNPC cooldown=2 cons=3 invisible=True hidden=True
+
+
+        parent6 >
+            parent7 >
+                immovable5 > Immovable img=oryx/diamond1
+                immovable6 > Immovable invisible=True hidden=True
+
+            parent8 >
+                immovable7 > Immovable img=oryx/diamond2
+                immovable8 > Immovable invisible=True hidden=True
+
+        resource0 > Resource color=GOLD limit=10
+
+        ongoingshootavatar0 > OngoingShootAvatar speed=0.4
+            ongoingshootavatar1 > img=oryx/dwarf1 stype=passive1
+            ongoingshootavatar2 > img=oryx/druid1 stype=passive2
+
+
+    LevelMapping
+        A > ongoingshootavatar1 immovable0
+        . > immovable0
+        o > randomnpc0 immovable0
+        u > randomnpc3 immovable0
+        x > immovable1 immovable4
+        w > immovable1 immovable0
+        m > immovable4 immovable0
+        1 > immovable5 immovable0
+        2 > immovable8 immovable0
+		
+    InteractionSet
+        ongoingshootavatar1 immovable1 > stepBack
+        ongoingshootavatar2 immovable3 > stepBack
+        ongoingshootavatar0 EOS > wrapAround
+
+        ongoingshootavatar1 randomnpc0 > killSprite scoreChange=-1
+        ongoingshootavatar2 randomnpc2 > killSprite scoreChange=-1
+
+        passive0 hole > killBoth
+        passive0 parent2 > killSprite
+        passive0 parent1 > killSprite
+
+        randomnpc0 immovable1 > stepBack pixelPerfect=True
+        randomnpc2 immovable3 > stepBack pixelPerfect=True
+        randomnpc1 immovable2 > stepBack pixelPerfect=True
+        randomnpc3 immovable4 > stepBack pixelPerfect=True
+
+        # MOVING UNDERGROUND
+        ongoingshootavatar1 passive1 > transformToAll stype=immovable5 stypeTo=immovable6
+        ongoingshootavatar1 passive1 > transformToAll stype=immovable8 stypeTo=immovable7
+        ongoingshootavatar1 passive1 > transformToAll stype=randomnpc0 stypeTo=randomnpc1
+        ongoingshootavatar1 passive1 > transformToAll stype=randomnpc3 stypeTo=randomnpc2
+        ongoingshootavatar1 passive1 > transformToAll stype=immovable1 stypeTo=immovable2
+        ongoingshootavatar1 passive1 > transformToAll stype=immovable4 stypeTo=immovable3
+        ongoingshootavatar1 passive1 > align
+        ongoingshootavatar1 passive1 > transformTo stype=ongoingshootavatar2 forceOrientation=true
+
+        # MOVING OVERGROUND
+        ongoingshootavatar2 passive2 > transformToAll stype=immovable7 stypeTo=immovable8
+        ongoingshootavatar2 passive2 > transformToAll stype=immovable6 stypeTo=immovable5
+        ongoingshootavatar2 passive2 > transformToAll stype=randomnpc2 stypeTo=randomnpc3
+        ongoingshootavatar2 passive2 > transformToAll stype=randomnpc1 stypeTo=randomnpc0
+        ongoingshootavatar2 passive2 > transformToAll stype=immovable3 stypeTo=immovable4
+        ongoingshootavatar2 passive2 > transformToAll stype=immovable2 stypeTo=immovable1
+        ongoingshootavatar2 passive2 > align
+        ongoingshootavatar2 passive2 > transformTo stype=ongoingshootavatar1 forceOrientation=true
+
+        ongoingshootavatar1 immovable5 > changeResource resource=resource0 value=1 killResource=True scoreChange=1
+        ongoingshootavatar2 immovable7 > changeResource resource=resource0 value=1 killResource=True scoreChange=1
+
+
+    TerminationSet
+        SpriteCounter stype=ongoingshootavatar0 limit=0 win=False
+        SpriteCounter stype=parent6 limit=0 win=True

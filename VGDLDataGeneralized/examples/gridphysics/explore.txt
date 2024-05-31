@@ -1,0 +1,34 @@
+BasicGame square_size=30 key_handler=Pulse
+
+    SpriteSet
+        immovable0 > Immovable hidden=True img=newset/chamber_floor
+        immovable1 > Immovable
+            immovable2 > img=newset/blockY
+            immovable3 > img=newset/blockY3
+        immovable4 > Immovable hidden=True invisible=True hidden=True
+        immovable5 > Immovable hidden=False invisible=False img=newset/flag1
+        immovable6 > Immovable invisible=True hidden=True
+        loschaser0 > LOSChaser stype=shootavatar0 cons=2 cooldown=2 img=oryx/guard1 speed=0.5 shrinkfactor=0.7
+        immovable7 > Immovable color=BLACK img=oryx/wall3 autotiling=true
+        shootavatar0 > ShootAvatar  img=newset/girl3 color=RED   stype=flicker0
+        flicker0 > Flicker img=oryx/staff1 shrinkfactor=0.5 singleton=True
+
+    InteractionSet
+        loschaser0 patrol EOS immovable7 > stepBack
+        shootavatar0 immovable7 > stepBack
+        shootavatar0 loschaser0 > killSprite
+        flicker0 immovable2 > transformToAll stype=immovable4 stypeTo=immovable5
+        immovable2 flicker0 > transformTo stype=immovable3
+        immovable5 shootavatar0 > spawn stype=immovable6
+
+    TerminationSet
+        MultiSpriteCounter stype1=immovable6 limit=1 win=True
+        SpriteCounter stype=shootavatar0 limit=0 win=False
+        Timeout limit=1000
+    
+    LevelMapping
+        _ > immovable0
+        A > shootavatar0 immovable0
+        p > immovable0 loschaser0
+        0 > immovable0 immovable2
+        a > immovable0 exit

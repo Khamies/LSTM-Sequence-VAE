@@ -12,7 +12,7 @@ class Trainer:
         self.loss = loss
         self.optimizer = optimizer
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        self.interval = 200
+        self.interval = 2
 
 
     def train(self, train_losses, epoch, batch_size, clip) -> list:  

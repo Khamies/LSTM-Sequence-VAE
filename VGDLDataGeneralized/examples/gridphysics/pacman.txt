@@ -1,0 +1,79 @@
+BasicGame square_size=20 obs=immovable4
+    SpriteSet
+        immovable0 > Immovable img=oryx/floor3
+        immovable1 > Immovable
+            immovable2 > color=PINK img=newset/cherries2
+            immovable3 > color=LIGHTYELLOW shrinkfactor=0.5 img=oryx/gold2
+            resource0  > Resource color=LIGHTGREEN shrinkfactor=0.8 img=oryx/orb2
+        spawnpoint0 > SpawnPoint img=portal portal=True invisible=True
+            spawnpoint1 > stype=randompathaltchaser0
+            spawnpoint2 > stype=randompathaltchaser3
+            spawnpoint3 > stype=randompathaltchaser1
+            spawnpoint4 > stype=randompathaltchaser2
+        parent0 >
+
+
+            parent1 >
+                parent2 > singleton=True
+                    randompathaltchaser0 > RandomPathAltChaser stype1=orientedavatar1 stype2=orientedavatar2 cooldown=4 img=oryx/ghost3 cons=4
+                    fleeing0 > Fleeing stype=orientedavatar0 maxDistance=500 cooldown=2 img=oryx/ghost1
+                parent3 > singleton=True
+                    randompathaltchaser1 > RandomPathAltChaser stype1=orientedavatar1 stype2=orientedavatar2 cooldown=4 img=oryx/ghost4 cons=4
+                    fleeing1 > Fleeing stype=orientedavatar0 maxDistance=500 cooldown=2 img=oryx/ghost1
+                parent4 > singleton=True
+                    randompathaltchaser2 > RandomPathAltChaser stype1=orientedavatar1 stype2=orientedavatar2 cooldown=4 img=oryx/ghost5 cons=4
+                    fleeing2 > Fleeing stype=orientedavatar0 maxDistance=500 cooldown=2 img=oryx/ghost1
+                parent5 > singleton=True
+                    randompathaltchaser3 > RandomPathAltChaser stype1=orientedavatar1 stype2=orientedavatar2 cooldown=4 img=oryx/ghost6 cons=4
+                    fleeing3 > Fleeing stype=orientedavatar0 maxDistance=500 cooldown=2 img=oryx/ghost1
+
+
+            orientedavatar0 > OrientedAvatar img=newset/pacman rotateInPlace=false speed=0.5
+                orientedavatar1  > color=YELLOW
+                orientedavatar2 > color=ORANGE            
+        immovable4 > Immovable img=oryx/wall3 autotiling=True
+    InteractionSet
+        parent0 immovable4 > stepBack
+        orientedavatar0 EOS  > wrapAround
+
+        parent1 EOS parent1 > stepBack
+
+        resource0 orientedavatar1  > killSprite
+        orientedavatar1 parent1  > killSprite scoreChange=-1
+
+        resource0 orientedavatar0 > killSprite scoreChange=10
+        immovable3 orientedavatar0 > killSprite scoreChange=1
+        immovable2 orientedavatar0 > killSprite scoreChange=5
+
+        orientedavatar1 resource0 > transformToAll stype=randompathaltchaser0 stypeTo=fleeing0
+        orientedavatar1 resource0 > transformToAll stype=randompathaltchaser2 stypeTo=fleeing2
+        orientedavatar1 resource0 > transformToAll stype=randompathaltchaser1 stypeTo=fleeing1
+        orientedavatar1 resource0 > transformToAll stype=randompathaltchaser3 stypeTo=fleeing3
+
+        orientedavatar1 resource0 > addTimer timer=200 ftype=transformToAll stype=fleeing0 stypeTo=randompathaltchaser0 killSecond=True
+        orientedavatar1 resource0 > addTimer timer=200 ftype=transformToAll stype=fleeing2 stypeTo=randompathaltchaser2 killSecond=True
+        orientedavatar1 resource0 > addTimer timer=200 ftype=transformToAll stype=fleeing1 stypeTo=randompathaltchaser1 killSecond=True
+        orientedavatar1 resource0 > addTimer timer=200 ftype=transformToAll stype=fleeing3 stypeTo=randompathaltchaser3 killSecond=True
+
+        orientedavatar1 resource0 > addTimer timer=200 ftype=transformToAll stype=orientedavatar2 stypeTo=orientedavatar1
+        orientedavatar1 resource0 > transformTo stype=orientedavatar2
+
+        parent1 orientedavatar2 > killSprite scoreChange=40
+
+
+        
+    LevelMapping
+        + > immovable0
+        0 > immovable0 resource0
+        . > immovable0 immovable3
+        A > immovable0 orientedavatar1
+        1 > immovable0 spawnpoint1
+        2 > immovable0 spawnpoint2
+        3 > immovable0 spawnpoint3
+        4 > immovable0 spawnpoint4
+        f > immovable0 immovable2
+        w > immovable0 immovable4
+        
+    TerminationSet
+        SpriteCounter stype=immovable1   win=True     
+        SpriteCounter stype=orientedavatar0 win=False   

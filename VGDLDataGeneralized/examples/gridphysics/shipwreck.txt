@@ -1,0 +1,77 @@
+BasicGame square_size=30
+    SpriteSet
+
+        immovable0 > Immovable img=newset/water3
+        immovable1 > Immovable img=oryx/grass autotiling=True
+
+        immovable2 > Immovable
+            immovable3 > img=newset/dock1
+            immovable4 > img=newset/dock2
+            immovable5 > img=newset/dock3
+
+        immovable6 > Immovable img=newset/shipwreck portal=True
+
+        spawnpoint0 > SpawnPoint invisible=True hidden=True
+            spawnpoint1  >  stype=resource1  prob=0.01
+            spawnpoint2  >  stype=resource2  prob=0.01
+            spawnpoint3  >  stype=resource3  prob=0.01
+
+        resource0 > Resource limit=1
+            resource1 > img=oryx/gold2 singleton=True
+            resource2 > img=oryx/diamond2 singleton=True
+            resource3 > img=oryx/goldsack singleton=True
+
+        immovable7 > Immovable img=newset/whirlpool2
+
+        resource4 > Resource invisible=True
+            parent0 >
+            parent1 >
+            parent2 >
+
+        movingavatar0 > MovingAvatar img=newset/ship
+
+
+    LevelMapping
+        . > immovable0
+        x > immovable0 immovable1
+        A > immovable0 movingavatar0
+        1 > immovable0 immovable3
+        2 > immovable0 immovable4
+        3 > immovable0 immovable5
+        w > immovable0 immovable7
+        s > immovable0 immovable6 spawnpoint1 spawnpoint2 spawnpoint3
+
+    TerminationSet
+        SpriteCounter      stype=movingavatar0               limit=0 win=False
+        Timeout limit=1000 win=True
+
+    InteractionSet
+        movingavatar0  EOS  > stepBack
+        movingavatar0  immovable1  > stepBack
+        movingavatar0 immovable7 > killSprite scoreChange=-10
+
+        resource0 movingavatar0 > collectResource
+
+        movingavatar0 immovable3 > spawnIfHasMore resource=resource1 limit=1 stype=parent0
+        movingavatar0 immovable4 > spawnIfHasMore resource=resource2 limit=1 stype=parent0
+        movingavatar0 immovable5 > spawnIfHasMore resource=resource3 limit=1 stype=parent0
+
+        movingavatar0 immovable3 > spawnIfHasMore resource=resource3 limit=1 stype=parent1
+        movingavatar0 immovable4 > spawnIfHasMore resource=resource1 limit=1 stype=parent1
+        movingavatar0 immovable5 > spawnIfHasMore resource=resource2 limit=1 stype=parent1
+
+        movingavatar0 immovable3 > spawnIfHasMore resource=resource2 limit=1 stype=parent2
+        movingavatar0 immovable4 > spawnIfHasMore resource=resource3 limit=1 stype=parent2
+        movingavatar0 immovable5 > spawnIfHasMore resource=resource1 limit=1 stype=parent2
+
+        movingavatar0 parent0 > changeResource resource=resource1 value=-1 killResource=True scoreChange=10
+        movingavatar0 parent0 > changeResource resource=resource2 value=-1 killResource=True scoreChange=10
+        movingavatar0 parent0 > changeResource resource=resource3 value=-1 killResource=True scoreChange=10
+
+        movingavatar0 parent1 > changeResource resource=resource1 value=-1 killResource=True scoreChange=5
+        movingavatar0 parent1 > changeResource resource=resource2 value=-1 killResource=True scoreChange=5
+        movingavatar0 parent1 > changeResource resource=resource3 value=-1 killResource=True scoreChange=5
+
+        movingavatar0 parent2 > changeResource resource=resource1 value=-1 killResource=True scoreChange=1
+        movingavatar0 parent2 > changeResource resource=resource2 value=-1 killResource=True scoreChange=1
+        movingavatar0 parent2 > changeResource resource=resource3 value=-1 killResource=True scoreChange=1

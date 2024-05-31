@@ -1,0 +1,41 @@
+BasicGame square_size=24
+    SpriteSet
+        immovable0 > Immovable img=newset/highway2 hidden=True
+        immovable1 > Immovable img=newset/street3 hidden=True
+        parent0 >
+            movingavatar0  > MovingAvatar speed=0.5 color=YELLOW  img=newset/car_red healthPoints=10 limitHealthPoints=20
+            parent1 >
+                missile0  > Missile orientation=DOWN speed=0.25 img=newset/tank_blue
+                missile1  > Missile orientation=DOWN speed=0.5 img=newset/car_green
+            parent2 > 
+                missile2 > Missile orientation=DOWN speed=1 img=newset/fuel
+                missile3 > Missile orientation=DOWN speed=1 img=newset/tree2
+        immovable2    > Immovable invisible=True hidden=True
+        spawnpoint0 > SpawnPoint invisible=True
+            spawnpoint1   > stype=missile0 cooldown=50  total=16
+            spawnpoint2   > stype=missile1 cooldown=100 total=8
+            spawnpoint3   > stype=missile2    cooldown=25  total=32
+            spawnpoint4   > stype=missile3    cooldown=2   total=400
+
+    InteractionSet
+        movingavatar0 TIME > subtractHealthPoints timer=10 repeating=True
+        movingavatar0 missile2 > addHealthPoints value=10 killSecond=True
+        movingavatar0 EOS  > stepBack
+        movingavatar0 parent1 missile3 > killSprite
+        missile3 EOS    > killSprite
+        parent1 EOS    > killSprite
+        parent2 EOS > killSprite
+
+    LevelMapping
+        f > spawnpoint3 immovable0
+        A > movingavatar0 immovable0
+        x > missile3 immovable1
+        t > spawnpoint4 immovable1
+        s > spawnpoint1 immovable0
+        c > spawnpoint2 immovable0
+        . > immovable0
+        + > immovable1
+
+    TerminationSet
+        SpriteCounter stype=movingavatar0 limit=0 win=False
+        Timeout limit=500 win=True

@@ -1,0 +1,97 @@
+BasicGame key_handler=Pulse
+    SpriteSet
+        immovable0 > Immovable img=oryx/floor3 hidden=True
+        immovable1 > Immovable color=BLACK
+        shootavatar0 > ShootAvatar stype=missile0 rotateInPlace=true img=oryx/archer1
+
+        immovable2 > Immovable
+            immovable3 > img=oryx/slime3
+            immovable4 > img=oryx/slime2
+            immovable5 > img=oryx/slime1
+            immovable6 > img=oryx/slime3
+            immovable7 > img=oryx/slime2
+            immovable8 > img=oryx/slime1
+
+        immovable9 > Immovable shrinkfactor=0.7
+            immovable10 > img=oryx/diamond2
+                immovable11 > img=oryx/slime3
+                immovable12 > img=oryx/slime3
+                immovable13 > img=oryx/slime3
+            parent0 > img=oryx/diamond3
+                parent1 > img=oryx/slime2
+                parent2 > img=oryx/slime2
+                parent3 > img=oryx/slime2
+            parent4 >  img=oryx/diamond1
+                parent5 > img=oryx/slime1
+                parent6 > img=oryx/slime1
+                parent7 > img=oryx/slime1
+
+
+        immovable14 > Immovable img=oryx/diamond3
+           immovable15 > orientation=UP img=newset/mirror_u
+           immovable16 > orientation=DOWN img=newset/mirror_d
+           immovable17 > orientation=RIGHT img=newset/mirror_r
+           immovable18 > orientation=LEFT img=newset/mirror_l
+           parent8 >
+
+        missile0 > Missile color=BLUE img=oryx/orb2 shrinkfactor=0.3
+        immovable19 > Immovable img=oryx/wall3 autotiling=True
+
+    LevelMapping
+        . > immovable0
+        , > immovable1
+        A > immovable0 shootavatar0
+        u > immovable0 immovable15
+        d > immovable0 immovable16
+        h > immovable0 immovable17
+        l > immovable0 immovable18
+        r > immovable0 immovable3
+        g > immovable0 immovable4
+        b > immovable0 immovable5
+        1 > immovable0 immovable11
+        2 > immovable0 immovable12
+        3 > immovable0 immovable13
+        4 > immovable0 parent1
+        5 > immovable0 parent2
+        6 > immovable0 parent3
+        7 > immovable0 parent5
+        8 > immovable0 parent6
+        9 > immovable0 parent7
+
+    InteractionSet
+
+        shootavatar0 immovable19 > stepBack
+        immovable14 shootavatar0  > bounceForward
+        immovable14 immovable19 > undoAll
+
+        immovable14 immovable1 > killSprite
+        shootavatar0 immovable1 > killSprite
+
+        missile0 immovable19 EOS > killSprite
+        missile0 immovable14 > attractGaze align=True
+
+        immovable10 missile0 > transformTo stype=immovable6
+        parent0 missile0 > transformTo stype=immovable7
+        parent4 missile0 > transformTo stype=immovable8
+
+        immovable3 missile0 > transformIfCount stype=immovable11 stypeCount=immovable2 geq=3 scoreChange=1
+        immovable3 missile0 > transformIfCount stype=immovable12 stypeCount=immovable2 geq=2 scoreChange=1
+        immovable3 missile0 > transformIfCount stype=immovable13 stypeCount=immovable2 geq=1 scoreChange=1
+
+        immovable5 missile0 > transformIfCount stype=parent5 stypeCount=immovable2 geq=3 scoreChange=1
+        immovable5 missile0 > transformIfCount stype=parent6 stypeCount=immovable2 geq=2 scoreChange=1
+        immovable5 missile0 > transformIfCount stype=parent7 stypeCount=immovable2 geq=1 scoreChange=1
+
+        immovable4 missile0 > transformIfCount stype=parent1 stypeCount=immovable2 geq=3 scoreChange=1
+        immovable4 missile0 > transformIfCount stype=parent2 stypeCount=immovable2 geq=2 scoreChange=1
+        immovable4 missile0 > transformIfCount stype=parent3 stypeCount=immovable2 geq=1 scoreChange=1
+
+        immovable6 missile0 > transformTo stype=immovable3 scoreChange=-1
+        immovable7 missile0 > transformTo stype=immovable4 scoreChange=-1
+        immovable8 missile0 > transformTo stype=immovable5 scoreChange=-1
+
+
+    TerminationSet
+        SpriteCounter stype=shootavatar0 limit=0 win=False
+        MultiSpriteCounterSubTypes stype1=immovable9 limit=6 subTypesNum=3 win=True
+        Timeout limit=1500 win=False

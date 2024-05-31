@@ -1,0 +1,43 @@
+BasicGame
+    SpriteSet
+
+        immovable0 > Immovable color=BLACK img=newset/water2
+        immovable1 > Immovable color=BLACK img=oryx/backLBrown
+        immovable2   > Immovable color=WHITE img=newset/lock1
+        spawnpoint0   > SpawnPoint cooldown=2  total=6 stype=randommissile0 img=newset/water5 frameRate=8
+        randommissile0 > RandomMissile color=ORANGE speed=0.25 invisible=True hidden=True
+        door0 > Door img=oryx/door2
+
+        resource0 > Resource limit=1 img=oryx/key2 singleton=True shrinkfactor=0.8
+        immovable3 > Immovable img=oryx/dirtwall autotiling=True
+        movingavatar0 > MovingAvatar img=newset/girl2 frameRate=8
+
+    InteractionSet
+
+        movingavatar0 immovable3 > stepBack
+
+        movingavatar0 immovable1 spawnpoint0 > shieldFrom ftype=killSprite stype=immovable0
+        movingavatar0 immovable0 > killSprite
+
+        door0 movingavatar0 > killSprite scoreChange=1
+
+        immovable1 randommissile0  > transformTo stype=spawnpoint0
+        randommissile0 immovable1 immovable3 > killSprite
+
+        resource0 movingavatar0      > collectResource
+        immovable2 movingavatar0 > killIfOtherHasMore resource=resource0 limit=1
+        movingavatar0 immovable2 > changeResource resource=resource0 value=-1
+        movingavatar0 immovable2 > stepBack
+
+    LevelMapping
+        . > immovable1 immovable0
+        c > immovable0
+        d > spawnpoint0 immovable0
+        e > immovable1 door0
+        A > movingavatar0 immovable1 immovable0
+        k > immovable1 immovable0 resource0
+        l > immovable2 immovable1 immovable0
+
+    TerminationSet
+        SpriteCounter stype=door0 win=True
+        SpriteCounter stype=movingavatar0    win=False

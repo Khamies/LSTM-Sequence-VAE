@@ -1,0 +1,46 @@
+BasicGame
+    SpriteSet
+        immovable0 > Immovable hidden=True img=oryx/backBiege
+        immovable1 > color=BROWN
+            randomnpc0 > RandomNPC speed=0.25 cons=8 img=newset/camel1 frameRate=7
+            missile0 > Missile speed=0.6 frameRate=4
+                missile1 > orientation=RIGHT img=newset/camel2
+                missile2 > orientation=LEFT img=newset/camel2L
+            missile3 > Missile speed=0.3 frameRate=6
+                missile4 > orientation=RIGHT img=newset/camel3
+                missile5 > orientation=LEFT img=newset/camel3L
+            missile6 > Missile speed=0.15 frameRate=10
+                missile7 > orientation=RIGHT img=newset/camel4
+                missile8 > orientation=LEFT img=newset/camel4L
+        parent0 >
+            door0  > Door color=GREEN img=newset/exit2
+        immovable2 > Immovable color=RED img=oryx/sparkle2
+        immovable3 > Immovable color=PINK img=oryx/sparkle1
+        movingavatar0 > MovingAvatar frameRate=8
+            movingavatar1 > img=newset/camel5L
+            movingavatar2 > img=newset/camel5
+
+        immovable4 > Immovable img=oryx/dirtwall autotiling=True
+
+    InteractionSet
+        movingavatar0 door0 > transformTo stype=immovable3 scoreChange=1
+        immovable1 door0  > transformTo stype=immovable2 scoreChange=-1
+        movingavatar0 immovable4 > stepBack
+        immovable1 immovable4  > stepBack
+
+    LevelMapping
+        g > door0 immovable0
+        r > randomnpc0 immovable0
+        h > missile1 immovable0
+        n > missile4 immovable0
+        t > missile7 immovable0
+        f > missile2 immovable0
+        m > missile5 immovable0
+        s > missile8 immovable0
+        . > immovable0
+        A > movingavatar2 immovable0
+        B > movingavatar1 immovable0
+
+    TerminationSet
+        MultiSpriteCounter stype1=immovable3 limit=1 win=True
+        MultiSpriteCounter stype1=immovable2 limit=1 win=False

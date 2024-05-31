@@ -1,0 +1,39 @@
+BasicGame
+    SpriteSet
+        immovable0 > Immovable img=oryx/grass autotiling=True
+        immovable1 > Immovable img=oryx/floor3
+        immovable2 > Immovable
+            immovable3 > color=BROWN img=oryx/tree1
+            door0  > Door color=GREEN img=oryx/dooropen1
+        parent0 >
+            shootavatar0 > ShootAvatar ammo=resource0 stype=flicker0 img=oryx/prince1
+            randomnpc0 > RandomNPC speed=1 cooldown=4 img=oryx/spelunky_0 cons=8
+        flicker0 > Flicker limit=5 singleton=True img=oryx/sword3
+        resource0 > Resource color=BLUE value=10000 limit=10000 img=oryx/sword3 shrinkfactor=0.7
+        resource1  > Resource color=GOLD limit=11 shrinkfactor=0.7 img=oryx/gold2 # this limit is only used for visualizing progress
+
+        immovable4 > Immovable img=oryx/dirtwall autotiling=True
+
+    InteractionSet
+        resource0 shootavatar0   > collectResource scoreChange=2
+        immovable3 flicker0     > killSprite scoreChange=1
+        resource1 shootavatar0     > collectResource scoreChange=1
+        resource1 randomnpc0     > collectResource
+        parent0 immovable4     > stepBack
+        shootavatar0 immovable3    > killIfHasMore      resource=resource1 limit=11
+        randomnpc0 immovable3    > killIfHasMore      resource=resource1 limit=11
+        door0 shootavatar0     > killIfOtherHasMore resource=resource1 limit=10
+
+    TerminationSet
+        SpriteCounter stype=door0   limit=0 win=True
+        SpriteCounter stype=shootavatar0 limit=0 win=False
+
+    LevelMapping
+        g > immovable0 immovable1 door0
+        . > immovable0 immovable3
+        0 > immovable0 resource1
+        1 > immovable0 randomnpc0
+        s > immovable0 resource0
+        + > immovable0
+        A > immovable0 shootavatar0
+        w > immovable0 wall

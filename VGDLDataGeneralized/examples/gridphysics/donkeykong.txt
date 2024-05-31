@@ -1,0 +1,73 @@
+BasicGame square_size=20
+    SpriteSet
+        immovable0 > Immovable img=oryx/backLBlue hidden=True
+        immovable1 > Immovable img=oryx/floor1 orientation=RIGHT hidden=True
+        immovable2 > Immovable img=oryx/floor1 orientation=RIGHT hidden=True
+        immovable3 > Immovable img=newset/ladder2 orientation=DOWN hidden=True
+        door0  > Door color=GREEN img=newset/exit2
+
+        bomberrandommissile0 > BomberRandomMissile stypeMissile=breakableBarrelR,toughBarrelR cooldown=50 invisible=True hidden=True
+        bomberrandommissile1 > BomberRandomMissile stypeMissile=breakableBarrelL,toughBarrelL cooldown=50 invisible=True hidden=True
+
+        missile0  > Missile
+            missile1  > orientation=DOWN speed=0.8
+                missile2 > img=oryx/barrel1
+                missile3 > img=oryx/barrel1
+                missile4 > img=oryx/barrel2
+                missile5 > img=oryx/barrel2
+            parent0 >
+                parent1 > speed=0.25 img=oryx/barrel1
+                    parent2 > orientation=RIGHT
+                    parent3 > orientation=LEFT
+                parent4 > speed=0.25 img=oryx/barrel2
+                    parent5 > orientation=RIGHT
+                    parent6 > orientation=LEFT
+
+        shootavatar0 > ShootAvatar speed=0.5 stype=missile6 frameRate=8 img=oryx/spelunky
+        missile6 > Missile img=newset/arrow speed=0.75 singleton=True
+        randomnpc0 > RandomNPC speed=0.001 img=newset/monkey2 frameRate=6
+        immovable4 > Immovable color=BLACK img=oryx/wall1
+        
+    InteractionSet
+
+        shootavatar0 immovable4 eos > stepBack
+        shootavatar0 missile1 parent0 > killSprite
+
+        missile1 immovable1 > attractGaze align=True
+        missile2 immovable1 > transformTo stype=parent2
+        missile3 immovable1 > transformTo stype=parent3
+        missile4 immovable1 > transformTo stype=parent5
+        missile5 immovable1 > transformTo stype=parent6
+
+        parent0 immovable3 > attractGaze align=True
+        parent2 immovable3 > transformTo stype=missile2
+        parent3 immovable3 > transformTo stype=missile3
+        parent5 immovable3 > transformTo stype=missile4
+        parent6 immovable3 > transformTo stype=missile5
+
+        parent0 immovable4 > reverseDirection
+        parent0 eos > killSprite
+        missile6 immovable4 eos > killSprite
+
+        missile6 parent1 > killBoth scoreChange=1
+
+        door0 shootavatar0  > killSprite scoreChange=1
+
+
+    
+    TerminationSet
+        SpriteCounter stype=door0   limit=0 win=True
+        SpriteCounter stype=shootavatar0 limit=0 win=False
+    
+    LevelMapping
+        _ > immovable0
+        g > door0 immovable2
+        w > immovable4
+        l > immovable3 immovable2
+        A > immovable2 shootavatar0
+        * > bomberrandommissile0 immovable2
+        x > bomberrandommissile1 immovable2
+        . > immovable1
+        d > randomnpc0 immovable2
+
+

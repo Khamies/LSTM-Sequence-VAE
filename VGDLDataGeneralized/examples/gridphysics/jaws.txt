@@ -1,0 +1,48 @@
+BasicGame
+    SpriteSet
+        immovable0 > Immovable img=newset/water2
+        spawnpoint0 > SpawnPoint color=LIGHTGRAY img=newset/whirlpool2 portal=True
+            spawnpoint1  >  stype=chaser0  prob=0.025 total=1
+            spawnpoint2  >  stype=missile1  prob=0.1 cooldown=10
+            spawnpoint3  >  stype=missile2  prob=0.1 cooldown=10
+
+        parent0 >
+            shootavatar0  > ShootAvatar color=YELLOW  stype=missile0 img=newset/submarine
+            missile0 > Missile color=YELLOW shrinkfactor=0.3 img=oryx/orb2
+            parent1 >
+                chaser0  > Chaser speed=0.1 color=ORANGE img=newset/shark2 stype=shootavatar0
+                missile1  > Missile  orientation=RIGHT  speed=0.1 color=BROWN img=newset/whale
+                missile2 > Missile orientation=LEFT speed=0.1 color=RED img=newset/piranha1
+
+        resource0 > Resource color=GOLD limit=20 img=oryx/amulat1 shrinkfactor=0.5
+        resource1 > Resource color=GOLD limit=1 img=oryx/sword4 shrinkfactor=0.5
+
+
+    LevelMapping
+        1 > immovable0 spawnpoint3
+        2 > immovable0 spawnpoint2
+        3 > immovable0 spawnpoint1
+        . > immovable0
+        A > immovable0 shootavatar0
+
+    TerminationSet
+        SpriteCounter stype=shootavatar0 limit=0 win=False
+        Timeout limit=1000 win=True
+
+    InteractionSet
+        EOS shootavatar0 chaser0 > stepBack
+        EOS missile0 parent1 > killSprite
+
+        missile1 missile0 > transformTo stype=resource0 scoreChange=1
+        missile2 missile0 > transformTo stype=resource0 scoreChange=1
+        missile0 parent1 > killSprite
+
+        resource1 shootavatar0 > collectResource scoreChange=1000
+        resource0 shootavatar0 > collectResource scoreChange=1
+
+        shootavatar0 chaser0 > spawnIfHasMore resource=resource0 limit=15 stype=resource1
+        chaser0 shootavatar0 > killIfOtherHasMore resource=resource0 limit=15
+
+        shootavatar0 chaser0  > killIfHasLess resource=resource0 limit=15
+        shootavatar0 missile1 missile2 > killSprite
+

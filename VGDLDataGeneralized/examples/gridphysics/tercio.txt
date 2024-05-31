@@ -1,0 +1,62 @@
+#Modality: #http://www.puzzlescript.net/play.html?p=6888061
+
+BasicGame key_handler=Pulse  square_size=50
+    SpriteSet
+        immovable0 > Immovable img=oryx/backBlack
+        immovable1 > Immovable img=oryx/backGrey
+        immovable2 > Immovable img=oryx/backBlue
+
+        immovable3 > Immovable img=oryx/backOBrown
+
+        immovable4 > Immovable img=newset/hole1
+        immovable5 > Immovable img=newset/hole1
+        passive0 > Passive img=oryx/bush5 shrinkfactor=0.8
+        movingavatar0 > MovingAvatar
+            movingavatar1 > img=newset/girl4
+            movingavatar2 > img=newset/girl2
+            movingavatar3 > img=newset/girl1
+            movingavatar4 > img=newset/girl3
+
+        immovable6 > Immovable img=oryx/dirtwall autotiling=True
+    
+    LevelMapping
+        . > immovable0
+        + > immovable1
+        - > immovable2
+        g > immovable3
+
+        B > movingavatar2 immovable0
+        A > movingavatar3 immovable1
+        L > movingavatar4 immovable2
+
+        * > passive0 immovable0
+        @ > passive0 immovable1
+        $ > passive0 immovable2
+
+        t > immovable4 immovable0
+        u > immovable4 immovable1
+        r > immovable4 immovable2
+
+        w > immovable6
+
+    TerminationSet
+        SpriteCounter      stype=immovable4               limit=0 win=True
+        Timeout limit=1000 win=False
+        
+    InteractionSet
+        movingavatar0 EOS > stepBack
+
+        movingavatar2 immovable1 immovable2 > stepBack
+        movingavatar3 immovable0 immovable2 > stepBack
+        movingavatar4 immovable0 immovable1 > stepBack
+
+        movingavatar0 immovable0 > transformTo stype=movingavatar2
+        movingavatar0 immovable1 > transformTo stype=movingavatar3
+        movingavatar0 immovable2 > transformTo stype=movingavatar4
+        movingavatar0 immovable3 > transformTo stype=movingavatar1
+
+        passive0 movingavatar0 > bounceForward
+        passive0 immovable6 > undoAll
+        immovable4 immovable6 > undoAll
+        movingavatar0 immovable6 > stepBack
+        immovable4 passive0 > transformTo stype=immovable5 scoreChange=1

@@ -1,0 +1,21 @@
+BasicGame square_size=10
+    SpriteSet
+        immovable0 > Immovable img=oryx/backGrey hidden=True
+        immovable1 > Immovable img=oryx/wall6
+        ongoingturningavatar0 > OngoingTurningAvatar speed=1.0 img=oryx/butcher1 spawnBehind=immovable1
+        passive0 > Passive img=oryx/slime5
+        immovable2 > Immovable img=oryx/dirtwall autotiling=True
+
+    LevelMapping
+        A > ongoingturningavatar0 immovable0
+        g > passive0 immovable0
+        . > immovable0
+		
+    InteractionSet
+        ongoingturningavatar0 immovable1 immovable2 > killSprite scoreChange=-1
+        passive0 ongoingturningavatar0 > killSprite scoreChange=2
+
+    TerminationSet
+        SpriteCounter stype=ongoingturningavatar0 limit=0 win=False
+        SpriteCounter stype=passive0 limit=0 win=True
+        Timeout limit=1000 win=False

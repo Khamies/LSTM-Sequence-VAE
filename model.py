@@ -5,7 +5,7 @@ from data.ptb import PTB
 
 class LSTM_VAE(torch.nn.Module):
 
-  def __init__(self, vocab_size, embed_size, hidden_size, latent_size, num_layers=1):
+  def __init__(self, vocab_size, embed_size, hidden_size, latent_size, num_layers=1, data_dir = "./VGDLData"):
     super(LSTM_VAE, self).__init__()
 
     self.device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -19,7 +19,7 @@ class LSTM_VAE(torch.nn.Module):
     self.latent_size = latent_size
 
     # For dictionary lookups 
-    self.dictionary = PTB(data_dir="./data", split="train", create_data= False, max_sequence_length= 60)
+    self.dictionary = PTB(data_dir=data_dir, split="all", create_data= False, max_sequence_length= 600)
   
     # X: bsz * seq_len * vocab_size 
     # Embedding
@@ -119,9 +119,15 @@ class LSTM_VAE(torch.nn.Module):
 
     return x_hat, mean, log_var, z, hidden_encoder
 
+  def get_z(self, words, sentences_length):
+    indexes = [self.dictionary.get_w2i().get(word, self.dictionary.w2i['<unk>']) for word in words]
+    x = torch.IntTensor([indexes])
+    x_hat, mean, log_var, z, hidden_encoder = self.forward(x, torch.IntTensor([len(words)]),self.init_hidden(1) )
+
+    return z
   
 
-  def inference(self, n_samples, sos, z):
+  def inference(self, n_samples, sos, z, end_early = True):
 
     # generate random z 
     batch_size = 1
@@ -141,8 +147,11 @@ class LSTM_VAE(torch.nn.Module):
       output = self.log_softmax(output)
       output = output.exp()
       _, s = torch.topk(output, 1)
-      idx_sample.append(s.item())
-      input = s.squeeze(0)
+      if end_early and  (self.dictionary.get_i2w()[str(s.item())]  == "<eos>"):
+        break 
+      else:
+        idx_sample.append(s.item())
+        input = s.squeeze(0)
 
     w_sample = [self.dictionary.get_i2w()[str(idx)] for idx in idx_sample]
     w_sample = " ".join(w_sample)

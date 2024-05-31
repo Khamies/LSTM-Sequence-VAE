@@ -1,0 +1,61 @@
+BasicGame square_size=20 obs=wall,tunnel
+    SpriteSet
+
+        parent0 >
+            immovable0 > Immovable img=oryx/wall3_0
+            passive0 > Passive img=newset/wallBlue
+            passive1 > Passive img=newset/wallRed
+            passive2 > Passive invisible=True hidden=True
+            passive3 > Passive invisible=True hidden=True
+            door0 > Door color=GREEN img=newset/exit2
+
+            door1 > Door
+                immovable1 > Immovable img=oryx/doorclosed1
+                immovable2 > Immovable img=oryx/dooropen1
+
+            parent1 > singleton=True
+                pathaltchaser0 > PathAltChaser stype1=orientedavatar1 stype2=orientedavatar2 cooldown=2 img=oryx/ogre1
+                pathaltchaser1 > PathAltChaser stype1=orientedavatar1 stype2=orientedavatar2 cooldown=2 img=oryx/ogre2 invisible=True hidden=True
+                pathaltchaser2 > PathAltChaser stype1=passive2 stype2=orientedavatar2 cooldown=1 img=oryx/ogre2 randomTarget=True invisible=True hidden=True
+
+            orientedavatar0 > OrientedAvatar rotateInPlace=false
+                orientedavatar1  > img=oryx/rogue color=YELLOW  speed=0.5 frameRate=8
+                orientedavatar2 > img=oryx/ghost2 color=ORANGE  speed=0.5
+
+            immovable3 > Immovable img=oryx/wall1
+
+
+
+    InteractionSet
+
+        parent0 immovable3 > stepBack pixelPerfect=True
+        orientedavatar0 passive1 > stepBack pixelPerfect=True
+        orientedavatar0 parent1  > killSprite scoreChange=-10
+        door0 orientedavatar0 > killSprite scoreChange=10
+
+        orientedavatar2 passive2 > transformToAll stype=pathaltchaser2 stypeTo=pathaltchaser0
+        orientedavatar2 passive2 > transformTo stype=orientedavatar1
+
+        orientedavatar1 passive0 > transformToAll stype=pathaltchaser0 stypeTo=pathaltchaser2
+        orientedavatar1 passive0 > transformToAll stype=pathaltchaser1 stypeTo=pathaltchaser2
+        orientedavatar1 passive0 > transformTo stype=orientedavatar2
+
+        pathaltchaser1 passive3 > transformToAll stype=pathaltchaser1 stypeTo=pathaltchaser0
+        pathaltchaser0 passive1 > transformToAll stype=pathaltchaser0 stypeTo=pathaltchaser1
+
+        orientedavatar0 immovable0 > transformToAll stype=immovable1 stypeTo=immovable2 scoreChange=2
+
+    LevelMapping
+        A > orientedavatar1
+        a > pathaltchaser0
+        e > door0
+        t > passive0
+        x > passive1
+        n > passive2
+        m > passive3
+        s > immovable0
+        d > immovable1
+
+    TerminationSet
+        SpriteCounter stype=door0   win=True
+        SpriteCounter stype=orientedavatar0 win=False

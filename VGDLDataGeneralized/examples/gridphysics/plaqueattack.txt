@@ -1,0 +1,48 @@
+BasicGame square_size=25
+  SpriteSet
+    immovable0 > Immovable hidden=True img=oryx/backBlack
+    immovable1 > Immovable
+        immovable2 > img=newset/tooth1
+        immovable3 > img=newset/tooth2
+    immovable4 > Immovable
+        immovable5 > img=newset/tooth3
+        immovable6 > img=newset/tooth4
+
+    parent0 >
+        shootavatar0  > ShootAvatar stype=missile0 img=newset/girl2 frameRate=8
+        chaser0 > Chaser speed=0.1
+            chaser1 >  stype=immovable2 img=newset/hotdog
+            chaser2 >  stype=immovable3 img=newset/burger
+
+    spawnpoint0 > SpawnPoint color=LIGHTGRAY portal=True
+        spawnpoint1  >  stype=chaser1  prob=0.15 cooldown=8 total=5 img=newset/fastfoodtrolley1
+        spawnpoint2  >  stype=chaser2  prob=0.15 cooldown=8 total=5 img=newset/fastfoodtrolley2
+
+    missile0 > Missile color=YELLOW shrinkfactor=0.5 img=oryx/slime1
+    immovable7 > Immovable img=oryx/wall6
+
+
+  LevelMapping
+    h > chaser1 immovable0
+    d > spawnpoint1 immovable0
+    b > chaser2 immovable0
+    v > spawnpoint2 immovable0
+    n > immovable3 immovable0
+    m > immovable2 immovable0
+    . > immovable0
+    A > shootavatar0 immovable0
+
+  InteractionSet
+    parent0 immovable7 > stepBack pixelPerfect=True
+    chaser0 missile0   > killBoth scoreChange=2
+    missile0 immovable7   > killSprite
+
+    immovable2 chaser0 > transformTo stype=immovable5 scoreChange=-3 killSecond=True
+    immovable5 shootavatar0 > transformTo stype=immovable2 scoreChange=1
+
+    immovable3 chaser0 > transformTo stype=immovable6 scoreChange=-3 killSecond=True
+    immovable6 shootavatar0 > transformTo stype=immovable3 scoreChange=1
+
+  TerminationSet
+    SpriteCounter stype=immovable1 win=False
+    MultiSpriteCounter stype1=spawnpoint0 stype2=chaser0 limit=0 win=True

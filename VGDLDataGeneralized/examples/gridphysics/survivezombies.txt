@@ -1,0 +1,38 @@
+BasicGame
+    SpriteSet
+        immovable0 > Immovable img=oryx/floor3
+        spawnpoint0 > SpawnPoint stype=randomnpc0    prob=0.02 color=PINK img=oryx/cloak3
+        parent0   > 
+            spawnpoint1   > SpawnPoint stype=chaser0 prob=0.05 color=RED img=oryx/tombstone1
+            spawnpoint2   > SpawnPoint stype=chaser0 prob=0.03 color=RED img=oryx/tombstone1
+        passive0  > Passive color=GOLD img=oryx/heart1
+        parent1 >
+            movingavatar0 > MovingAvatar healthPoints=1 limitHealthPoints=10 frameRate=8 img=oryx/swordman1
+            randomnpc0    > RandomNPC speed=1   cooldown=3  color=YELLOW img=oryx/priest1
+            chaser0 > Chaser stype=movingavatar0 cooldown=6 speed=0.5 color=BROWN img=newset/zombie
+        immovable1 > Immovable autotiling=true img=oryx/wall3
+
+    InteractionSet
+        movingavatar0 passive0    > addHealthPoints killSecond=True scoreChange=1
+
+        parent1 immovable1     > stepBack
+
+        movingavatar0 chaser0   > subtractHealthPoints scoreChange=-1
+        chaser0 movingavatar0   > killSprite
+
+        randomnpc0 chaser0      > transformTo stype=passive0 killSecond=True
+        movingavatar0 parent0     > killSprite scoreChange=-1
+
+    TerminationSet
+        Timeout limit=1000 win=True
+        SpriteCounter stype=movingavatar0 limit=0 win=False
+
+    LevelMapping
+        0 > immovable0 spawnpoint0
+        1 > immovable0 spawnpoint2
+        2 > immovable0 spawnpoint1
+        . > immovable0 passive0
+        - > immovable0 chaser0
+        + > immovable0
+        A > immovable0 movingavatar0
+        w > wall

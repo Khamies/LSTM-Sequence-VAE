@@ -1,0 +1,25 @@
+BasicGame
+    SpriteSet
+        immovable0 > Immovable img=oryx/grass autotiling=True hidden=True
+        door0 > Door color=GREEN img=newset/exit2
+        movingavatar0 > MovingAvatar img=newset/girl1
+        immovable1 > Immovable img=oryx/spike2
+        immovable2 > Immovable img=oryx/wall1
+
+    InteractionSet
+
+        movingavatar0 immovable2 > stepBack
+        door0 movingavatar0 > killSprite scoreChange=1
+        movingavatar0 immovable1 > killSprite scoreChange=-1
+
+    TerminationSet
+        SpriteCounter stype=movingavatar0 limit=0 win=False
+        SpriteCounter stype=door0 limit=0 win=True
+        Timeout limit=1000 win=False
+
+    LevelMapping
+        x > immovable0 door0
+        t > immovable0 immovable1
+        . > immovable0
+        w > immovable0 immovable2
+        A > immovable0 avatar

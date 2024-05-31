@@ -1,0 +1,43 @@
+#(Inspired by) Notsnake: http://www.puzzlescript.net/play.html?p=e2c1c8e99b3f9d9b6edd
+
+BasicGame key_handler=Pulse square_size=60
+    SpriteSet
+        
+        immovable0 > Immovable color=GRAY img=oryx/backGrey
+        immovable1 > Immovable color=DARKBLUE img=newset/paint2
+
+        flicker0 > Flicker limit=2 invisible=TRUE
+        resource0 > Resource limit=2
+
+        flicker1 > Flicker limit=2 invisible=TRUE
+        resource1 > Resource limit=2
+
+        movingavatar0 > MovingAvatar shrinkfactor=0.8 img=newset/painter21
+
+        immovable2 > Immovable img=newset/floor5
+
+    LevelMapping
+        A > movingavatar0 immovable0
+        . > immovable0
+        x > immovable1
+        w > immovable2
+
+    InteractionSet
+        movingavatar0 EOS > stepBack
+        
+        flicker0 movingavatar0 > killSprite
+        immovable0 movingavatar0 > spawn stype=flicker0
+        flicker0 immovable0 > changeResource resource=resource0 value=1
+        flicker0 immovable0 > spawnIfHasMore resource=resource0 limit=2 stype=immovable1
+        immovable0 flicker0 > killIfOtherHasMore resource=resource0 limit=2  scoreChange=1
+        
+        flicker1 movingavatar0 > killSprite
+        immovable1 movingavatar0 > spawn stype=flicker1
+        flicker1 immovable1 > changeResource resource=resource1 value=1
+        flicker1 immovable1 > spawnIfHasMore resource=resource1 limit=2 stype=immovable0
+        immovable1 flicker1 > killIfOtherHasMore resource=resource1 limit=2 
+
+    TerminationSet
+        SpriteCounter stype=immovable0 limit=0 win=True
+        
+        

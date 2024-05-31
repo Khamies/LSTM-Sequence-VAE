@@ -1,0 +1,40 @@
+#Bait: http://www.mobygames.com/game/bait
+
+BasicGame  key_handler=Pulse square_size=50
+    SpriteSet
+
+        immovable0 > Immovable hidden=True img=oryx/backLBrown
+        immovable1   > Immovable color=DARKBLUE img=newset/hole1
+        movingavatar0 > MovingAvatar
+            movingavatar1 > img=oryx/swordman1 frameRate=8
+            movingavatar2 > img=oryx/swordmankey1 frameRate=8
+        immovable2 > Immovable img=oryx/mushroom2 shrinkfactor=0.6
+        passive0 > Passive img=oryx/key2 shrinkfactor=0.7
+        immovable3 > Immovable img=oryx/doorclosed1
+        passive1    > Passive img=newset/block3 shrinkfactor=0.8
+        immovable4 > Immovable img=oryx/dirtwall autotiling=True
+
+    LevelMapping
+        A > movingavatar1 immovable0
+        0 > immovable1 immovable0
+        1 > passive1 immovable0
+        k > passive0 immovable0
+        g > immovable3 immovable0
+        m > immovable2 immovable0
+        . > immovable0
+
+    InteractionSet
+        movingavatar0 immovable4 > stepBack
+        movingavatar0 immovable1 > killSprite
+        passive1 movingavatar0  > bounceForward
+        passive1 immovable4 passive1 immovable2 > undoAll
+        passive1 immovable1 > killBoth scoreChange=1
+        movingavatar1 passive0 > transformTo stype=movingavatar2
+        passive0 movingavatar0 > killSprite
+        movingavatar1 immovable3    > stepBack
+        immovable3 movingavatar2 > killSprite scoreChange=5
+        immovable2 movingavatar0 > killSprite scoreChange=1
+
+    TerminationSet
+        SpriteCounter stype=immovable3 limit=0 win=True
+        SpriteCounter stype=movingavatar0 limit=0 win=False

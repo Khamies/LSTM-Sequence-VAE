@@ -1,0 +1,40 @@
+BasicGame
+  SpriteSet
+    immovable0 > Immovable img=oryx/backBlack
+    immovable1  > Immovable color=GREEN img=newset/city1
+    flicker0 > Flicker limit=5 img=oryx/cspell5 shrinkfactor=0.7
+    parent0 >
+        shootavatar0 > ShootAvatar stype=flicker0 img=newset/humanShotgun
+        parent1 >
+            chaser0 > Chaser stype=immovable1
+                chaser1  > color=ORANGE speed=0.1 img=newset/alienShotgun_0
+                chaser2  > color=YELLOW speed=0.3 img=newset/alienShotgun_1
+            chaser3 > Chaser stype=immovable1 color=ORANGE speed=0.1 img=newset/niceGuy
+    immovable2   > Immovable hidden=True invisible=True
+    spawnpoint0  > SpawnPoint invisible=True hidden=True
+        spawnpoint1 > stype=chaser1   cooldown=100  total=2 
+        spawnpoint2 > stype=chaser2   cooldown=100  total=2 
+        spawnpoint3   > stype=chaser3      cooldown=100  total=2
+
+    immovable3 > Immovable img=newset/block2
+
+  LevelMapping
+    c > immovable1 immovable0
+    m > spawnpoint1 immovable0
+    f > spawnpoint2 immovable0
+    n > spawnpoint3 immovable0
+    . > immovable0
+    A > shootavatar0 immovable0
+
+  InteractionSet
+    parent0 EOS    > stepBack
+    parent0 immovable3   > stepBack
+    chaser0 immovable1     > killBoth scoreChange=-1
+    chaser3 flicker0 > transformTo stype=immovable2 scoreChange=-1
+    chaser0 flicker0   > killSprite scoreChange=2
+    chaser3 immovable1   > killSprite scoreChange=2
+
+  TerminationSet
+    SpriteCounter stype=immovable1   win=False
+    MultiSpriteCounter stype1=parent1 stype2=spawnpoint0 limit=0 win=True
+    MultiSpriteCounter stype1=immovable2 limit=1 win=False

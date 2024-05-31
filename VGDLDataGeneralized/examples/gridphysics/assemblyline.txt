@@ -1,0 +1,96 @@
+BasicGame key_handler=Pulse
+    SpriteSet
+        immovable0 > Immovable img=newset/floor2
+
+        immovable1 > Immovable
+            immovable2 > color=PINK
+            immovable3 > color=LIGHTORANGE
+            immovable4 > color=GREEN
+
+        immovable5 > Immovable hidden=True
+            immovable6 > orientation=DOWN img=newset/linedown
+            immovable7 > orientation=RIGHT img=newset/lineright
+            immovable8 > orientation=UP img=newset/lineup
+            immovable9 > orientation=LEFT img=newset/lineleft
+
+
+        shootavatar0 > ShootAvatar stype=flicker0 rotateInPlace=true img=newset/man3
+        flicker0 > Flicker limit=1 singleton=True img=oryx/mace1 shrinkfactor=0.5
+        spawnpoint0 > SpawnPoint
+            spawnpoint1 > img=newset/lasercannon stype=missile1
+            spawnpoint2 > img=newset/lasercannon_2 stype=missile2
+            spawnpoint3 > img=newset/lasercannon_1 stype=missile3
+            spawnpoint4 > img=newset/lasercannon_3 stype=missile4
+            spawnpoint5 > img=newset/lasercannon_4 stype=missile4
+
+        missile0 > Missile color=YELLOW  shrinkfactor=0.5 speed=0.5
+            missile1 > orientation=UP img=newset/laser1
+            missile2 > orientation=DOWN img=newset/laser1
+            missile3 > orientation=RIGHT img=newset/laser1_1
+            missile4 > orientation=LEFT img=newset/laser1_1
+
+        immovable10 > Immovable img=oryx/dooropen1 portal=true
+        passive0    > Passive img=newset/block3
+
+        spawnpoint6  > SpawnPoint orientation=DOWN  stype=missile6  cooldown=20 img=spawnpoint6 portal=True
+        missile5 > Missile color=RED speed=0.1
+            missile6 > img=newset/potato
+            missile7 > img=newset/potatoeyes
+            missile8 > img=newset/potatoeyesnose
+            missile9 > img=newset/potatofull
+            missile10 > img=oryx/goldsack
+
+        immovable11 > Immovable img=oryx/wall3 autotiling=True
+
+
+    LevelMapping
+        . > immovable0
+        A > immovable0 shootavatar0
+        l > immovable0 spawnpoint4
+        r > immovable0 spawnpoint3
+        u > immovable0 spawnpoint1
+        d > immovable0 spawnpoint2
+        g > immovable0 immovable10
+        p > immovable0 spawnpoint6
+        v > immovable0 passive0
+
+        1 > immovable0 immovable2 immovable6
+        2 > immovable0 immovable3 immovable7
+        3 > immovable0 immovable4 immovable6
+        4 > immovable0 immovable2 immovable7
+        5 > immovable0 immovable3 immovable8
+        6 > immovable0 immovable4 immovable9
+        7 > immovable0 immovable3 immovable6
+        8 > immovable0 immovable2 immovable9
+        9 > immovable0 immovable4 immovable7
+
+    InteractionSet
+    
+        shootavatar0 immovable11 spawnpoint0 > stepBack
+
+        passive0 shootavatar0  > bounceForward
+        passive0 immovable11 passive0 spawnpoint0  > undoAll
+        missile0 passive0 immovable11 > killSprite
+
+        spawnpoint2 flicker0 > transformTo stype=spawnpoint5
+        spawnpoint4 flicker0 > transformTo stype=spawnpoint2
+        spawnpoint1 flicker0 > transformTo stype=spawnpoint4
+        spawnpoint3 flicker0 > transformTo stype=spawnpoint1
+        spawnpoint5 flicker0 > transformTo stype=spawnpoint3
+        flicker0 spawnpoint0 > killSprite
+
+        missile5 missile0 > attractGaze align=True
+        missile5 immovable11 spawnpoint0 > killSprite
+
+
+        missile6 immovable2 > transformTo stype=missile7 scoreChange=1
+        missile7 immovable3 > transformTo stype=missile8 scoreChange=2
+        missile8 immovable4 > transformTo stype=missile9 scoreChange=4
+
+        missile5 spawnpoint6 immovable5 > attractGaze align=True
+
+        missile9 immovable10 > transformTo stype=missile10
+
+    TerminationSet
+        MultiSpriteCounter stype1=missile10 limit=1 win=True min=True
+        Timeout limit=1500 win=False

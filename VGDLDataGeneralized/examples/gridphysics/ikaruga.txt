@@ -1,0 +1,59 @@
+BasicGame square_size=24
+    SpriteSet
+        immovable0 > Immovable img=oryx/space1 hidden=True
+        immovable1    > Immovable    color=WHITE img=oryx/planet
+        flakavatar0  > FlakAvatar rotateInPlace=False
+            flakavatar1 > stype=missile1 img=oryx/spaceship1
+            flakavatar2 > stype=missile2 img=oryx/spaceship2
+        missile0 > Missile
+            missile1  > orientation=UP    color=BLUE singleton=True img=oryx/cspell1
+            missile2  > orientation=UP    color=BLUE singleton=True img=oryx/orb3 shrinkfactor=0.5
+            missile3         > orientation=DOWN  color=RED cooldown=4 speed=1 img=newset/bomb
+        missile4 > Missile orientation=DOWN color=RED cooldown=2 speed=0.5
+            missile5 > img=oryx/mineral1
+            missile6 > img=oryx/mineral3
+        bomber0   > Bomber stype=missile3 prob=0.01  cooldown=6 speed=0.9 orientation=DOWN
+            bomber1 > img=oryx/bird3
+            bomber2 > img=oryx/bird1
+        spawnpoint0  > SpawnPoint invisible=True hidden=True img=spawnpoint0
+        	spawnpoint1   > stype=bomber2   cooldown=28  total=10 
+        	spawnpoint2   > stype=bomber1   cooldown=28  total=10
+        	spawnpoint3   > stype=bomber2   cooldown=56  total=5
+        	spawnpoint4   > stype=bomber1   cooldown=56  total=5
+        spawnpoint5 > SpawnPoint invisible=True hidden=True cooldown=100  total=40 img=spawnpoint0
+        	spawnpoint6 > stype=missile5
+        	spawnpoint7 > stype=missile6
+    
+    LevelMapping
+        o > immovable1 immovable0
+        q > spawnpoint1 immovable0
+        w > spawnpoint2 immovable0
+        e > spawnpoint3 immovable0
+        r > spawnpoint4 immovable0
+        A > flakavatar1 immovable0
+        z > spawnpoint6 immovable0
+        x > spawnpoint7 immovable0
+        . > immovable0
+
+    TerminationSet
+        SpriteCounter      stype=flakavatar0               limit=0 win=False
+        MultiSpriteCounter stype1=spawnpoint0 stype2=bomber0 limit=0 win=True
+        
+    InteractionSet
+        flakavatar0      immovable1        > stepBack
+        flakavatar0      EOS         > stepBack
+        bomber0       EOS         > killSprite
+        missile4     EOS         > killSprite
+        missile0     EOS         > killSprite
+        missile3        missile1 > killBoth
+        missile3        missile2 > killBoth
+        
+        flakavatar2  missile5 > transformTo stype=flakavatar1
+        missile5 flakavatar2  > killSprite
+        flakavatar1  missile6 > transformTo stype=flakavatar2
+        missile6 flakavatar1  > killSprite
+        
+        flakavatar0      bomber0       > killSprite scoreChange=-1
+        flakavatar0      missile3        > killBoth scoreChange=-1
+        bomber1  missile2 > killBoth scoreChange=1
+        bomber2  missile1 > killBoth scoreChange=1

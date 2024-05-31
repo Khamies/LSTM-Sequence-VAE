@@ -1,0 +1,41 @@
+BasicGame
+    SpriteSet
+        none0 > solid=True
+            missile0 > Missile orientation=UP speed=0.1 color=BLUE
+            immovable0 > Immovable singleton=False img=newset/blockB
+            immovable1 > Immovable color=DARKGRAY
+
+        parent0 > physicstype=CONT gravity=1.0 friction=0.02
+            wizardavatar0 > WizardAvatar color=YELLOW stype=immovable0 img=newset/chef jump_strength=16 mass=1
+            passive0    > Passive img=newset/cloud2 shrinkfactor=0.8
+            passive1   >  orientation=LEFT
+                walker0     > Walker img=oryx/rat2
+                walkerjumper0 > WalkerJumper color=RED
+
+        immovable2 > Immovable color=GREEN img=newset/cheese
+        immovable3 > Immovable img=newset/egg
+
+        immovable4 > Immovable solid=False color=DARKGRAY
+            
+    TerminationSet
+        SpriteCounter stype=immovable2  win=True
+        SpriteCounter stype=wizardavatar0    win=False
+           
+    InteractionSet
+        passive1 wizardavatar0 > killIfFromAbove scoreChange=1
+        wizardavatar0 passive1 > killIfAlive
+        parent0 EOS  > killSprite
+        immovable2 wizardavatar0 > killSprite
+
+        parent0 immovable4 immovable1 > wallStop
+        parent0 immovable0 > wallStop
+
+        immovable3 wizardavatar0 > killSprite scoreChange=1
+        immovable0 bullet > killSprite
+
+    LevelMapping
+        G > immovable2
+        1 > walker0
+        c > immovable3
+        . > immovable1
+        w > wall

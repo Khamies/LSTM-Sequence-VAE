@@ -1,0 +1,27 @@
+BasicGame square_size=80 key_handler=Pulse
+    SpriteSet
+        immovable0 > Immovable img=oryx/floor4
+        door0 > Door img=oryx/door2
+        immovable1 > Immovable img=oryx/wall6
+        immovable2 > Immovable img=newset/water
+        passive0 > Passive img=oryx/potion1
+        movingavatar0 > MovingAvatar img=oryx/mage1
+    TerminationSet
+        SpriteCounter stype=door0 limit=0 win=True
+        SpriteCounter stype=movingavatar0 limit=0 win=False
+    InteractionSet
+        movingavatar0 immovable1 > stepBack
+        passive0 movingavatar0 > bounceForward
+        passive0 immovable1 passive0 > undoAll
+        immovable1 passive0 > undoAll
+        immovable2 passive0 > killBoth
+        movingavatar0 immovable2 > killSprite
+        door0 movingavatar0 > killSprite
+
+    LevelMapping
+        A > immovable0 movingavatar0
+        w > immovable1
+        x > immovable0 immovable2
+        c > immovable0 passive0
+        o > immovable0 door0
+        . > background

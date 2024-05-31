@@ -1,0 +1,87 @@
+BasicGame square_size=30
+    SpriteSet
+
+        immovable0 > Immovable img=oryx/backBiege hidden=True
+        immovable1    > Immovable    color=WHITE img=oryx/wall6
+        orientedavatar0  > OrientedAvatar healthPoints=20 img=newset/girl2 speed=0.4
+        bomber0 > Bomber stype=missile0 prob=0 orientation=RIGHT speed=0.25 img=newset/cop1
+
+        immovable2 > Immovable invisible=True hidden=True
+            immovable3 > orientation=LEFT img=dirt
+            immovable4 > orientation=RIGHT img=dirt
+            immovable5 > orientation=UP img=dirt
+            immovable6 > orientation=DOWN img=dirt
+
+        bomber1 > Bomber prob=0.4 cooldown=3 speed=1
+            bomber2 > orientation=LEFT spawnorientation=DOWN stype=missile0 img=newset/bandit1h
+            bomber3 > orientation=RIGHT spawnorientation=UP stype=missile0 img=newset/bandit1
+            bomber4 > orientation=LEFT spawnorientation=UP stype=missile0 img=newset/bandit1h
+            bomber5 > orientation=RIGHT spawnorientation=DOWN stype=missile0 img=newset/bandit1
+
+
+        door0 > Door
+            immovable7 > Immovable img=oryx/doorclosed1
+            immovable8 > Immovable img=oryx/dooropen1
+        door1 > Door
+            immovable9 > Immovable img=oryx/doorclosed1
+            immovable10 > Immovable img=oryx/dooropen1
+        immovable11 > Immovable img=oryx/wall3_0
+            parent0 >
+            parent1 >
+
+        missile0 > Missile img=oryx/orb1 shrinkfactor=0.5 speed=0.6
+        door2 > Door img=oryx/door2
+        immovable12 > Immovable img=oryx/dirtwall autotiling=True
+
+    LevelMapping
+        0 > immovable0 immovable1
+        l > immovable0 bomber2
+        r > immovable0 bomber5
+        . > immovable0 bomber4
+        , > immovable0 bomber3
+        A > immovable0 orientedavatar0
+        1 > immovable0 immovable5
+        2 > immovable0 immovable3
+        3 > immovable0 immovable6
+        4 > immovable0 immovable4
+        n > immovable0 running
+        e > immovable0 door2
+        p > immovable0 bomber0
+        g > immovable0 immovable7
+        h > immovable0 immovable9
+        a > immovable0 parent0
+        b > immovable0 parent1
+        _ > immovable0
+        x > immovable0 bomber0 immovable3
+
+
+    TerminationSet
+        SpriteCounter      stype=orientedavatar0           limit=0 win=False
+        SpriteCounter      stype=door2             limit=0 win=True
+        
+    InteractionSet
+
+        orientedavatar0  immovable1 bomber0 > stepBack
+        orientedavatar0  immovable12 > stepBack
+
+        immovable1 missile0 > killBoth
+        missile0 EOS immovable12 > killSprite
+
+        bomber2 immovable4 > transformTo stype=bomber5
+        bomber4 immovable4 > transformTo stype=bomber3
+        bomber5 immovable3 > transformTo stype=bomber2
+        bomber3 immovable3 > transformTo stype=bomber4
+
+        bomber0 immovable2 > attractGaze align=True
+        orientedavatar0 missile0 > subtractHealthPoints
+        missile0 orientedavatar0 bomber0 > killSprite
+        bomber0 door2 > killSprite
+
+
+        orientedavatar0 immovable7 immovable9 > stepBack
+        bomber0 immovable7 immovable9 orientedavatar0 > stepBack
+        orientedavatar0 parent0 > transformToAll stype=immovable7 stypeTo=immovable8
+        orientedavatar0 parent1 > transformToAll stype=immovable9 stypeTo=immovable10
+
+
+        door2 orientedavatar0 > killSprite

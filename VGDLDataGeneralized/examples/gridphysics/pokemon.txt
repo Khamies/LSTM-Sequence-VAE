@@ -1,0 +1,84 @@
+BasicGame
+    SpriteSet
+
+        immovable0 > Immovable img=newset/floor6 hidden=True
+        shootavatar0 > ShootAvatar stype=flicker0 img=newset/girl1
+
+        chaser0 > Chaser stype=bomberrandommissile0 speed=0.9 img=oryx/explosion1 singleton=True
+            parent0 >
+            parent1 >
+            parent2 >
+        parent3 > speed=0.9
+            chaser1 > Chaser img=oryx/sparkle1 stype=spawnpoint0  singleton=True #does damage depending on spawnpoint0 type
+            chaser2 > Chaser img=oryx/sparkle2 stype=spawnpoint0  singleton=True #changes spawnpoint0 type
+            chaser3 > Chaser img=oryx/sparkle3 singleton=True stype=bomberrandommissile1 #heals friendly pokemons
+            chaser4 > Chaser img=oryx/sparkle3 singleton=True stype=bomberrandommissile2 #heals friendly pokemons
+            chaser5 > Chaser img=oryx/sparkle4 stype=spawnpoint0  singleton=True #all pokemons have access to this, damage to all spawnpoint0 types
+
+        bomberrandommissile0 > BomberRandomMissile speed=0
+            bomberrandommissile1 > img=oryx/scorpion1 stypeMissile=ability0,ability4 prob=0.001 healthPoints=20 limitHealthPoints=20
+            bomberrandommissile2 > img=oryx/bat1 stypeMissile=ability1,ability4 prob=0.005 healthPoints=30 limitHealthPoints=30
+            bomberrandommissile3 > img=oryx/wolf1 stypeMissile=ability2,ability3,ability4 prob=0.01 healthPoints=10 limitHealthPoints=10
+
+        spawnpoint0 > SpawnPoint prob=0.0001 healthPoints=100 limitHealthPoints=100
+            spawnpoint1 > img=oryx/dragon1 stype=parent0
+            spawnpoint2 > img=oryx/freak2 stype=parent1
+            spawnpoint3 > img=oryx/worm2 stype=parent2
+
+        flicker0 > Flicker img=oryx/slash1 singleton=True
+
+        immovable1 > Immovable img=oryx/wall6
+
+
+    TerminationSet
+        SpriteCounter stype=bomberrandommissile0  win=False
+        SpriteCounter stype=spawnpoint0   win=True
+        Timeout limit=1000 win=False
+
+    InteractionSet
+        shootavatar0 immovable1 > stepBack
+
+        flicker0 bomberrandommissile1 > spawn stype=chaser1
+        flicker0 bomberrandommissile2 > spawn stype=chaser2
+        flicker0 bomberrandommissile3 > spawn stype=chaser4
+        flicker0 bomberrandommissile0 > killSprite
+
+        spawnpoint1 chaser1 > subtractHealthPoints value=10
+        spawnpoint2 chaser1 > subtractHealthPoints value=13
+        spawnpoint3 chaser1 > subtractHealthPoints value=17
+
+        spawnpoint0 chaser2 > transformToRandomChild stype=spawnpoint0
+
+        bomberrandommissile1 chaser3 > addHealthPointsToMax value=6
+        bomberrandommissile2 chaser4 > addHealthPointsToMax value=9
+
+        spawnpoint0 chaser5 > subtractHealthPoints value=32
+
+        spawnpoint1 parent3 > spawn stype=parent0
+        spawnpoint2 parent3 > spawn stype=parent1
+        spawnpoint3 parent3 > spawn stype=parent2
+        spawnpoint3 parent3 > addHealthPoints value=8
+
+        bomberrandommissile0 parent0 > subtractHealthPoints value=12
+        bomberrandommissile0 parent1 > subtractHealthPoints value=3
+        bomberrandommissile0 parent1 > transformToRandomChild stype=bomberrandommissile0
+        bomberrandommissile0 parent2 > subtractHealthPoints value=6
+
+        parent3 spawnpoint0 > killSprite
+        chaser3 bomberrandommissile1 > killSprite
+        chaser4 bomberrandommissile2 > killSprite
+        chaser0 bomberrandommissile0 > killSprite
+
+        parent3 immovable1 > killSprite
+        chaser0 immovable1 > killSprite
+
+
+    LevelMapping
+        A > immovable0 shootavatar0
+        d > immovable0 spawnpoint1
+        a > immovable0 spawnpoint2
+        t > immovable0 spawnpoint3
+        0 > immovable0 bomberrandommissile1
+        1 > immovable0 bomberrandommissile2
+        2 > immovable0 bomberrandommissile3
+        . > floor

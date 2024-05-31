@@ -1,0 +1,64 @@
+BasicGame
+    SpriteSet
+
+        immovable0 > Immovable img=newset/water2_1
+        shootavatar0 > ShootAvatar stype=orientedflicker0 img=newset/man3
+        immovable1 > Immovable
+            immovable2 > img=oryx/backLBrown
+            immovable3 > img=oryx/backBiege
+
+        orientedflicker0 > OrientedFlicker limit=1 color=LIGHTGRAY img=oryx/pickaxe shrinkfactor=0.4
+
+        immovable4 > Immovable img=newset/bomb shrinkfactor=0.8
+        spawnpoint0  > SpawnPoint stype=spreader0 total=1 shrinkfactor=0.6 img=oryx/sparkle1
+        parent0 >
+            spreader0 > Spreader color=ORANGE spreadprob=1.0 stype=immovable5 img=oryx/fire1
+            immovable5 > Immovable img=oryx/fire1
+
+        immovable6 > Immovable img=newset/whirlpool2
+        immovable7 > Immovable img=newset/hole1 portal=true
+
+        resource0 > Resource limit=10 color=YELLOW shrinkfactor=0.45 img=oryx/wall4 shrinkfactor=0.6
+        immovable8 > Immovable img=oryx/treasure2
+
+
+    LevelMapping
+        . > immovable0
+        x > immovable3
+        A > immovable3 shootavatar0
+        b > immovable0 immovable4
+        p > immovable0 immovable6
+        t > immovable3 immovable8
+        g > immovable3 immovable7
+
+    InteractionSet
+
+        shootavatar0 EOS wall immovable4  > stepBack
+        shootavatar0  immovable5  > killSprite
+
+        immovable4 immovable5 orientedflicker0 > transformTo stype=spawnpoint0
+        immovable0 immovable5 > transformTo stype=immovable2
+
+        immovable5 immovable1 immovable6 immovable7 immovable8 EOS wall > killSprite
+        immovable5 fireEnd > transformTo stype=immovable2
+
+        resource0 shootavatar0 > collectResource
+
+        shootavatar0 immovable0  > killIfHasLess resource=resource0 limit=0
+        shootavatar0 immovable0 > changeResource resource=resource0 value=-1
+        immovable0 shootavatar0 > transformTo stype=immovable2
+
+        immovable8 shootavatar0 > killSprite scoreChange=100
+
+        orientedflicker0 immovable3 > spawnIfHasMore resource=resource0 stype=resource0 limit=0
+        immovable3 resource0 > transformTo stype=immovable2
+
+        orientedflicker0 immovable0 > spawnIfHasMore resource=resource0 stype=resource0 limit=1
+        shootavatar0 immovable6 > killSprite
+        immovable7 shootavatar0 > killSprite scoreChange=1
+
+
+    TerminationSet
+        SpriteCounter      stype=immovable7 limit=0 win=True
+        SpriteCounter      stype=shootavatar0 limit=0 win=False
+        Timeout limit=1000 win=False

@@ -1,0 +1,19 @@
+BasicGame
+    SpriteSet    
+        immovable0    > Immovable img=oryx/orb2
+        immovable1 > physicstype=CONT friction=0.02
+            orientedavatar0 > OrientedAvatar img=oryx/alien1
+            randomnpc0 > RandomNPC  img=oryx/alien2
+            
+    TerminationSet
+        SpriteCounter stype=immovable0    win=True     
+        SpriteCounter stype=orientedavatar0 win=False     
+           
+    InteractionSet
+        immovable1 wall > wallStop
+        orientedavatar0 randomnpc0 > killSprite
+        immovable0 orientedavatar0    > killSprite scoreChange=1
+        
+    LevelMapping
+        G > immovable0
+        1 > bullet

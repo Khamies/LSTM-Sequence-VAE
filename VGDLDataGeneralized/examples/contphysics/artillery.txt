@@ -1,0 +1,39 @@
+BasicGame
+    SpriteSet    
+        immovable0    > Immovable img=oryx/devil1
+        immovable1    > Immovable img=oryx/floorTileOrange
+        aimedavatar0 > AimedAvatar stype=missile0 img=newset/lasercannon_1
+        missile0 > Missile physicstype=CONT gravity=0.5 friction=0.02 speed=25 singleton=True img=oryx/bullet1 shrinkfactor=4
+        missile1    > Missile img=newset/cloud2 shrinkfactor=0.8 physicstype=CONT gravity=0.5 friction=0.02
+        immovable2 > Immovable img=oryx/backBrown
+            
+    TerminationSet
+        SpriteCounter stype=immovable0    win=True
+        SpriteCounter stype=aimedavatar0 win=False
+           
+    InteractionSet
+        immovable2 missile0 > killSprite 
+        missile0 immovable2 > killSprite
+        missile0 wall > killSprite
+        missile0 immovable1 > wallBounce
+        immovable0 missile0 > killSprite scoreChange=1
+        aimedavatar0 wall > stepBack
+        aimedavatar0 EOS > stepBack
+        missile0 EOS > killSprite
+        missile1 wall > halfSpeed
+        missile1 wall > wallBounce
+        immovable0 missile1 > killSprite
+        immovable2 missile1 > killSprite
+        missile1 immovable2 > halfSpeed
+        missile1 immovable2 > wallBounce
+        missile1 missile0 > bounceForward
+        missile1 box > wallBounce
+        missile1 aimedavatar0 > wallBounce
+        missile0 missile1 > killSprite
+        
+
+    LevelMapping
+        G > immovable0
+        B > immovable1
+        b > missile1
+        d > breakable

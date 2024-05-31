@@ -1,0 +1,47 @@
+BasicGame square_size=30
+    SpriteSet
+        immovable0 > Immovable img=oryx/grass autotiling=True hidden=True
+        immovable1 > Immovable color=BLUE img=oryx/seaWater
+        immovable2 > Immovable
+            immovable3 > orientation=DOWN  color=RED img=oryx/bookDown
+            immovable4 > orientation=UP  color=ORANGE img=oryx/bookUp
+            immovable5  > orientation=RIGHT color=YELLOW img=oryx/bookRight
+            immovable6  > orientation=LEFT color=YELLOW img=oryx/bookLeft
+        parent0 >
+            movingavatar0 > MovingAvatar img=oryx/vampire1
+            missileavatar0 > MissileAvatar img=oryx/bat1
+                missileavatar1  > orientation=UP color=RED
+                missileavatar2  > orientation=DOWN color=ORANGE
+                missileavatar3   > orientation=RIGHT color=YELLOW
+                missileavatar4   > orientation=LEFT color=GREEN
+        immovable7  > Immovable color=GREEN img=oryx/dooropen1 portal=True
+        immovable8 > Immovable img=oryx/bush5
+    LevelMapping
+        . > immovable1 immovable0
+        0 > immovable5 immovable0
+        1 > immovable3 immovable0
+        2 > immovable4 immovable0
+        3 > immovable6 immovable0
+        g > immovable7 immovable0
+        A > movingavatar0 immovable0
+        _ > immovable0
+        w > immovable8 immovable0
+    InteractionSet
+
+        missileavatar0 immovable8 > transformTo stype=movingavatar0
+        movingavatar0 immovable8 > stepBack
+        movingavatar0 immovable1 > killSprite
+
+        parent0 immovable2    > attractGaze prob=1
+
+        parent0 immovable6  > transformTo stype=missileavatar4
+        parent0 immovable5  > transformTo stype=missileavatar3
+        parent0 immovable3 > transformTo stype=missileavatar2
+        parent0 immovable4 > transformTo stype=missileavatar1
+
+        immovable2 parent0    > killSprite scoreChange=1
+        immovable7 parent0        > killSprite
+
+    TerminationSet
+        SpriteCounter stype=immovable7    limit=0 win=True
+        SpriteCounter stype=parent0  limit=0 win=False

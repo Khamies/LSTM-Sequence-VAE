@@ -1,0 +1,62 @@
+BasicGame key_handler=Pulse
+    SpriteSet
+
+        immovable0 > Immovable img=newset/floor6 hidden=True
+        movingavatar0 > MovingAvatar img=newset/chef frameRate=8
+        resource0 > Resource img=oryx/key2 limit=1 shrinkfactor=0.6
+        immovable1 > Immovable img=newset/lock1
+
+        parent0 >
+            passive0 > Passive
+                passive1 > img=newset/boilingwater frameRate=8
+                passive2 > img=newset/pasta
+                passive3 > img=newset/tomato shrinkfactor=0.7
+                passive4 > img=newset/tuna shrinkfactor=0.7
+
+            passive5 > Passive
+                passive6 > img=newset/pastaplate shrinkfactor=0.9
+                passive7 > img=newset/tomatosauce shrinkfactor=0.9
+
+        immovable2 > Immovable
+            immovable3  > img=oryx/slash1
+            immovable4 > img=newset/pastasauce
+        immovable5 > Immovable color=BLACK img=newset/floor4
+
+
+    LevelMapping
+        b > passive1 immovable0
+        p > passive2 immovable0
+        o > passive3 immovable0
+        t > passive4 immovable0
+        k > resource0 immovable0
+        l > immovable1 immovable0
+        . > immovable0
+        A > movingavatar0 immovable0
+
+    InteractionSet
+
+        parent0 movingavatar0 > bounceForward
+        parent0 immovable5 immovable1 resource0 > undoAll
+
+        passive2 passive1 > transformTo stype=passive6 scoreChange=4 killSecond=True
+        passive2 passive4  > transformTo stype=immovable3 scoreChange=-1 killSecond=True
+        passive2 passive3 > transformTo stype=immovable3 scoreChange=-1 killSecond=True
+        passive2 passive7 > transformTo stype=immovable3 scoreChange=-1 killSecond=True
+
+        passive3 passive4 > transformTo stype=passive7 scoreChange=4 killSecond=True
+        passive3 passive1 > transformTo stype=immovable3 scoreChange=-1 killSecond=True
+        passive3 passive6 > transformTo stype=immovable3 scoreChange=-1 killSecond=True
+        passive1 passive7 > transformTo stype=immovable3 scoreChange=-1 killSecond=True
+
+        passive4 passive1 > transformTo stype=immovable3 scoreChange=-1 killSecond=True
+        passive4 passive6 > transformTo stype=immovable3 scoreChange=-1 killSecond=True
+        passive6 passive7 > transformTo stype=immovable4 scoreChange=17 killSecond=True
+
+        resource0 movingavatar0 > collectResource scoreChange=1
+        immovable1 movingavatar0 > killIfOtherHasMore resource=resource0 limit=1
+
+        movingavatar0 immovable5 immovable1 > stepBack
+
+    TerminationSet
+        MultiSpriteCounter stype1=immovable3 limit=1 win=False
+        MultiSpriteCounter stype1=immovable4 limit=1 win=True

@@ -1,0 +1,48 @@
+BasicGame square_size=32
+    SpriteSet
+        collectible >
+        harmful >
+            alienGreen > Bomber  prob=0.01 img=oryx/alien3 stype=bomb cooldown=3 speed=0.8
+            bomb > Missile  orientation=DOWN img=oryx/bullet2 color=RED speed=0.5
+            alienBlue > Bomber  prob=0.01 img=oryx/alien1 stype=bomb cooldown=3 speed=0.8
+            portalSlow > SpawnPoint  total=20 img=portal hidden=True stype=alienBlue cooldown=16 invisible=True
+        background > Immovable  img=oryx/space1 hidden=True
+        portalFast > SpawnPoint  total=20 img=portal hidden=True stype=alienGreen cooldown=12 invisible=True
+        avatar > FlakAvatar  img=oryx/spaceship1 stype=sam
+        wall > Immovable  solid=True color=DARKGRAY
+        sam > Missile  singleton=True orientation=UP img=oryx/bullet1 color=BLUE
+        base > Immovable  img=oryx/planet color=WHITE
+    LevelMapping
+        . > background
+        0 > background base
+        1 > background portalSlow
+        2 > background portalFast
+        A > background avatar
+    TerminationSet
+        SpriteCounter stype=harmful limit=0 win=True
+        SpriteCounter stype=avatar limit=0 win=False
+    InteractionSet
+        portalSlow avatar > killSprite scoreChange=1
+        avatar alienGreen > killSprite
+        avatar bomb > killSprite
+        avatar alienBlue > killSprite
+        avatar bomb > killSprite
+        avatar alienBlue > killSprite
+        bomb avatar > killSprite scoreChange=1
+        avatar EOS > stepBack
+        sam EOS > reverseDirection
+        bomb EOS > reverseDirection
+        alienGreen EOS > turnAround
+        alienBlue EOS > turnAround
+        alienGreen sam > killSprite scoreChange=1
+        sam alienGreen > killSprite
+        bomb sam > killSprite scoreChange=1
+        sam bomb > killSprite
+        alienBlue sam > killSprite scoreChange=1
+        sam alienBlue > killSprite
+        bomb sam > killSprite scoreChange=1
+        sam bomb > killSprite
+        alienBlue sam > killSprite scoreChange=1
+        sam alienBlue > killSprite
+        portalSlow sam > killSprite scoreChange=1
+        sam portalSlow > killSprite

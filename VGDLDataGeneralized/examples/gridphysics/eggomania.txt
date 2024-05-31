@@ -1,0 +1,44 @@
+BasicGame
+
+    SpriteSet
+        immovable0   > Immovable    color=BROWN  img=newset/log
+        immovable1 > Immovable    color=YELLOW img=newset/eggcracked
+        resource0 > Resource color=GOLD limit=20
+        parent0 >
+            bomber0  > Bomber stype=missile2   img=newset/chicken
+                bomber1 > prob=0.2  cooldown=4 speed=0.8 frameRate=4
+                    bomber2 > orientation=RIGHT img=newset/chickenr
+                    bomber3 > orientation=LEFT img=newset/chicken
+                parent1 > prob=0.1  cooldown=6 speed=0.4 frameRate=8
+                    parent2 > orientation=RIGHT img=newset/chickenr
+                    parent3 > orientation=LEFT img=newset/chicken
+            flakavatar0  > FlakAvatar stype=missile1 ammo=resource0 minAmmo=5 ammoCost=5 img=newset/girl3
+        missile0 > Missile
+            missile1  > orientation=UP    color=BLUE singleton=True img=oryx/fireup1
+            missile2  > orientation=DOWN  color=RED speed=0.2 img=newset/egg
+        immovable2 > Immovable img=oryx/wall6
+
+    InteractionSet
+        bomber0 immovable2  > reverseDirection
+        bomber2 immovable2 > transformTo stype=fastChickenL
+        bomber3 immovable2 > transformTo stype=fastChickenR
+        parent2 immovable2 > transformTo stype=slowChickenL
+        parent3 immovable2 > transformTo stype=slowChickenR
+        bomber0 immovable2  > stepBack
+        flakavatar0 immovable2  > stepBack
+        missile2 immovable2  > transformTo stype=immovable1
+        flakavatar0 missile2 > changeResource resource=resource0 value=1 scoreChange=1 killResource=True
+        bomber0 missile1 > killSprite scoreChange=100
+        missile1 EOS > killSprite
+
+    LevelMapping
+        #s > slowChickenR
+        #c > fastChickenR
+        s > parent1
+        c > bomber1
+        t > immovable0
+
+    TerminationSet
+        Timeout limit=1500 win=True
+        SpriteCounter      stype=bomber0 limit=0 win=True
+        MultiSpriteCounter stype1=immovable1 limit=1 win=False

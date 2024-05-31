@@ -1,0 +1,63 @@
+BasicGame square_size=30
+    SpriteSet
+        immovable0 > Immovable img=newset/highway3 hidden=True
+        immovable1 > Immovable img=newset/street3 hidden=True
+        parent0 >
+
+            parent1 >
+                ongoingshootavatar0  > OngoingShootAvatar speed=0.2 color=YELLOW img=newset/camel1 healthPoints=50 limitHealthPoints=50 stype=orientedflicker0
+                    missileavatar0 > MissileAvatar speed=0.5
+                missile0   > Missile orientation=RIGHT  img=newset/camel2
+                    missile1 > speed=0.2
+                    missile2 > speed=0.4
+                    missile3 > speed=0.6
+            parent2 >
+                missile4  > Missile orientation=LEFT speed=0.5 img=newset/car1
+                missile5  > Missile orientation=LEFT speed=0.75 img=newset/car2
+                missile6    > Missile orientation=LEFT speed=0.9 img=newset/firetruckL
+            parent3 >
+                missile7 > Missile orientation=LEFT speed=0.8 img=newset/tree2
+                missile8 > Missile orientation=LEFT speed=0.5 img=newset/exit2 portal=True
+
+        bomberrandommissile0      > BomberRandomMissile invisible=True hidden=True stypeMissile=carSlow,carFast,truck cooldown=15 prob=0.5 total=80
+        bomberrandommissile1  > BomberRandomMissile invisible=True hidden=True stypeMissile=mbikeSlow,mbikeMed,mbikeFast cooldown=20 prob=0.6  total=400
+
+        spawnpoint0 > SpawnPoint invisible=True hidden=True stype=missile8 prob=1 total=1 cooldown=25
+        spawnpoint1   > SpawnPoint invisible=True hidden=True stype=missile7 cooldown=2 total=400
+
+        immovable2 > Immovable color=RED img=oryx/sparkle2
+        immovable3 > Immovable color=PINK img=oryx/sparkle1
+
+        orientedflicker0 > OrientedFlicker invisible=True hidden=True limit=1 singleton=True
+
+    InteractionSet
+        ongoingshootavatar0 EOS  > stepBack
+        ongoingshootavatar0 parent2 missile7 > subtractHealthPoints
+        ongoingshootavatar0 TIME > transformToAll stype=bomberrandommissile0 stypeTo=spawnpoint0 nextExecution=500 timer=500 repeating=False
+        missile0 parent2 missile7 > killSprite
+        missile7 EOS    > killSprite
+        parent2 EOS    > killSprite
+        parent3 EOS > killSprite
+
+        missile0 missile8 > transformTo stype=immovable2
+        ongoingshootavatar0 missile8 > spawn stype=immovable3
+        missile8 ongoingshootavatar0 > killSprite
+
+        ongoingshootavatar0 orientedflicker0 > addTimer timer=10 ftype=transformToAll stype=missileavatar0 stypeTo=ongoingshootavatar0 forceOrientation=True
+        ongoingshootavatar0 orientedflicker0 > transformTo stype=missileavatar0 killSecond=True forceOrientation=True
+
+    LevelMapping
+        b > bomberrandommissile1 immovable0
+        A > ongoingshootavatar0 immovable0
+        x > missile7 immovable1
+        p > bomberrandommissile0 immovable0
+        t > spawnpoint1 immovable1
+        s > missile4 immovable0
+        c > missile5 immovable0
+        . > immovable0
+        + > immovable1
+
+    TerminationSet
+        MultiSpriteCounter stype1=immovable3 limit=1 win=True
+        MultiSpriteCounter stype1=immovable2 limit=1 win=False
+        SpriteCounter stype=ongoingshootavatar0 limit=0 win=False

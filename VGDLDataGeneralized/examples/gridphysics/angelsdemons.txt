@@ -1,0 +1,63 @@
+BasicGame
+
+    SpriteSet
+        immovable0 > Immovable img=oryx/backLBlue
+        immovable1   > Immovable    color=BROWN  img=newset/cloud1
+        immovable2 > Immovable    color=YELLOW img=newset/cursedman
+
+        parent0 >
+            bomber0  > Bomber stype=missile1   img=oryx/devil1 prob=0.15  cooldown=6 speed=0.4 frameRate=8
+            bomber1  > Bomber stype=missile2   img=oryx/angel1 prob=0.05  cooldown=6 speed=0.45 frameRate=8
+            chaser0 > Chaser stype=immovable3 img=newset/man2 speed=0.4
+            chaser1 > Chaser stype=immovable3 img=newset/blessedman speed=0.4
+
+        movingavatar0 > MovingAvatar img=newset/girl4 frameRate=10
+
+        spawnpoint0 > SpawnPoint stype=chaser0  cooldown=16 img=oryx/dooropen1 portal=True
+        immovable3 > Immovable img=oryx/dooropen1 portal=True
+        passive0    > Passive img=newset/cloud2 shrinkfactor=0.8
+
+        missile0 > Missile
+            missile1  > orientation=DOWN  color=RED speed=0.2 img=oryx/firedown1
+            missile2 > orientation=DOWN  color=RED speed=0.2 img=oryx/icedown1
+
+        immovable4 > Immovable img=oryx/wall3 autotiling=True
+
+    InteractionSet
+        parent0 immovable4  > reverseDirection
+        parent0 immovable4  > stepBack
+        movingavatar0 immovable4 EOS > stepBack
+
+        passive0 movingavatar0  > bounceForward
+        passive0 box  > bounceForward repeat=10
+        passive0 immovable4    > killSprite
+
+        missile1 immovable4  > killSprite scoreChange=-1
+        missile1 passive0 > killSprite scoreChange=1
+
+        chaser0 missile1 > transformTo stype=immovable2 killSecond=True scoreChange=-1
+
+        missile1 movingavatar0 > killSprite scoreChange=-5
+
+        missile2 immovable4  > killSprite scoreChange=1
+        missile2 passive0 > killSprite scoreChange=-1
+
+        chaser0 missile2 > transformTo stype=chaser1 killSecond=True scoreChange=100
+
+        chaser0 immovable3 > killSprite
+        chaser1 immovable3 > killSprite
+
+    LevelMapping
+        d > immovable0 bomber0
+        a > immovable0 bomber1
+        t > immovable0 immovable1
+        x > immovable0 passive0
+        i > immovable0 spawnpoint0
+        o > immovable0 immovable3
+        . > immovable0
+        w > immovable4
+        A > immovable0 movingavatar0
+
+    TerminationSet
+        Timeout limit=1000 win=True
+        MultiSpriteCounter stype1=immovable2 limit=1 win=False

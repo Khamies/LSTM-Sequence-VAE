@@ -1,0 +1,42 @@
+BasicGame square_size=25
+    SpriteSet
+        immovable0 > Immovable img=oryx/space1 hidden=True
+        ongoingavatar0 > OngoingAvatar speed=0.5 img=oryx/spaceship1 healthPoints=15 limitHealthPoints=20
+        immovable1 > Immovable img=oryx/explosion2
+        passive0 > Passive portal=True img=newset/whirlpool3
+        randombomber0 > RandomBomber stype=missile0 prob=0.4 cooldown=3 speed=0.001 rotateInPlace=True img=newset/satellite
+        missile0 > Missile color=RED speed=0.9 img=oryx/circleEffect1 shrinkfactor=0.7
+        passive1 > Passive
+            passive2 > img=oryx/planet
+            passive3 > img=oryx/planet1
+        passive4 > Passive  hidden=True invisible=True
+
+    LevelMapping
+        A > ongoingavatar0 immovable0
+        . > immovable0
+        b > passive0 immovable0
+        t > randombomber0 immovable0
+        p > passive2 immovable0
+        w > immovable1 immovable0
+        a > passive4 immovable0
+		
+    InteractionSet
+
+        ongoingavatar0 immovable1 > subtractHealthPoints scoreChange=-1
+        ongoingavatar0 EOS > killSprite
+
+        ongoingavatar0 missile0 > attractGaze
+        ongoingavatar0 missile0 > subtractHealthPoints
+        missile0 ongoingavatar0 > killSprite
+
+        ongoingavatar0 passive2 > align
+        passive2 ongoingavatar0 > transformTo stype=passive3
+        ongoingavatar0 passive1 > addHealthPoints
+
+        ongoingavatar0 passive4 > addTimer timer=2 ftype=transformToAll stype=passive3 stypeTo=passive2
+        passive0 ongoingavatar0 > killSprite scoreChange=1
+
+    TerminationSet
+        SpriteCounter stype=ongoingavatar0 limit=0 win=False
+        SpriteCounter stype=passive0 limit=0 win=True
+        Timeout limit=1000 win=False

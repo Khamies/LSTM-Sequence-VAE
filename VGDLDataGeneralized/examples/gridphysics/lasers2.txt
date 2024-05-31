@@ -1,0 +1,85 @@
+BasicGame key_handler=Pulse
+    SpriteSet
+        immovable0 > Immovable img=oryx/floor3 hidden=True
+        immovable1 > Immovable img=oryx/dooropen1 portal=true
+        shootavatar0 > ShootAvatar stype=missile5 rotateInPlace=true img=oryx/archer1
+        passive0    > Passive img=newset/block2
+        passive1 > Passive img=oryx/diamond3
+           passive2 > orientation=UP img=newset/mirror_u
+           passive3 > orientation=DOWN img=newset/mirror_d
+           passive4 > orientation=RIGHT img=newset/mirror_r
+           passive5 > orientation=LEFT img=newset/mirror_l
+           parent0 >
+
+        spawnpoint0 > SpawnPoint 
+            spawnpoint1 > img=newset/lasercannon stype=missile1
+            spawnpoint2 > img=newset/lasercannon_2 stype=missile2
+            spawnpoint3 > img=newset/lasercannon_1 stype=missile3
+            spawnpoint4 > img=newset/lasercannon_3 stype=missile4
+            spawnpoint5 > img=newset/lasercannon_4 stype=missile4
+        missile0 > Missile color=YELLOW  shrinkfactor=0.5 speed=0.5
+            missile1 > orientation=UP img=newset/laser3
+            missile2 > orientation=DOWN img=newset/laser3
+            missile3 > orientation=RIGHT img=newset/laser3
+            missile4 > orientation=LEFT img=newset/laser3
+        missile5 > Missile color=BLUE singleton=True img=oryx/orb2 shrinkfactor=0.3
+        immovable2 > Immovable img=newset/block3
+
+        immovable3 > Immovable img=oryx/wall3 autotiling=True
+
+    LevelMapping
+        . > immovable0
+        A > immovable0 shootavatar0
+        b > immovable0 passive0
+        m > immovable0 spawnpoint4
+        s > immovable0 spawnpoint3
+        t > immovable0 spawnpoint1
+        e > immovable0 spawnpoint2
+        g > immovable0 immovable1
+        u > immovable0 passive2
+        d > immovable0 passive3
+        r > immovable0 passive4
+        l > immovable0 passive5
+        o > immovable0 immovable2
+
+    InteractionSet
+
+        shootavatar0 immovable3 immovable2 spawnpoint0 > stepBack
+
+        shootavatar0 passive0 passive1 > shieldFrom ftype=killIfFrontal stype=missile0
+        passive0 shootavatar0  > bounceForward
+        passive1 shootavatar0  > bounceForward
+
+        passive0 immovable3 passive0 passive1 immovable2 spawnpoint0 > undoAll
+        passive1 immovable3 passive1 passive0 spawnpoint0 > undoAll
+
+        shootavatar0 immovable3 > stepBack
+
+        missile0 immovable3 passive0 missile5 > killSprite
+        immovable2 missile0 > killSprite
+        missile5 immovable3 spawnpoint0 passive1 EOS > killSprite
+
+        shootavatar0 missile0 > killIfFrontal
+        shootavatar0 missile0 > killIfNotFrontal
+
+
+        immovable1 shootavatar0 > killSprite scoreChange=5
+
+        spawnpoint2 missile5 > transformTo stype=spawnpoint5
+        spawnpoint4 missile5 > transformTo stype=spawnpoint2
+        spawnpoint1 missile5 > transformTo stype=spawnpoint4
+        spawnpoint3 missile5 > transformTo stype=spawnpoint1
+        spawnpoint5 missile5 > transformTo stype=spawnpoint3
+
+        missile0 passive1 > attractGaze align=True
+
+        passive3 missile5 > transformTo stype=parent0
+        passive5 missile5 > transformTo stype=passive3
+        passive2 missile5 > transformTo stype=passive5
+        passive4 missile5 > transformTo stype=passive2
+        parent0 missile5 > transformTo stype=passive4
+
+
+    TerminationSet
+        SpriteCounter stype=shootavatar0    limit=0 win=False
+        SpriteCounter stype=immovable1    limit=0 win=True

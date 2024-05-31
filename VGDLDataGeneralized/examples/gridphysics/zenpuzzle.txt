@@ -1,0 +1,25 @@
+#http://www.puzzlescript.net/editor.html?hack=6847423
+
+BasicGame key_handler=Pulse square_size=48
+    SpriteSet
+        immovable0 > Immovable img=oryx/backBiege hidden=True
+        flicker0 > Flicker limit=1
+        movingavatar0  > MovingAvatar img=oryx/angel1
+        immovable1 > Immovable img=oryx/floorTileOrange
+        immovable2 > Immovable img=oryx/floorTileGreen
+        immovable3 > Immovable img=oryx/wall5
+    
+    LevelMapping
+        r > immovable0 immovable3
+        g > immovable0 immovable1
+        . > immovable0
+        A > immovable0 movingavatar0
+        
+    TerminationSet
+        SpriteCounter      stype=movingavatar0               limit=0 win=False  
+        MultiSpriteCounter   stype1=flicker0  stype2=immovable1   limit=0 win=True
+
+    InteractionSet
+        movingavatar0  EOS immovable3 immovable2  > stepBack
+        immovable1 movingavatar0 > transformTo stype=immovable2 scoreChange=1
+        immovable2 movingavatar0 > spawn stype=flicker0

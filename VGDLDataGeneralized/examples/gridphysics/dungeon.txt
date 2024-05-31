@@ -1,0 +1,91 @@
+BasicGame square_size=30
+    SpriteSet
+
+        immovable0 > Immovable hidden=True img=oryx/floor3
+        parent0 >
+            resource0 > Resource color=GOLD limit=11 img=oryx/gold1 shrinkfactor=0.5
+            resource1 > Resource img=oryx/key2 limit=1
+
+        parent1 >
+            door0 > Door color=GREEN img=oryx/doorclosed1
+            immovable1 > Immovable img=newset/lock1
+
+        parent2
+        spawnpoint0 > SpawnPoint stype=spreader0 img=oryx/torch1 prob=0.05
+        parent3 >
+            spreader0 > Spreader color=ORANGE spreadprob=1.0 stype=flicker0 img=oryx/fire1  shrinkfactor=0.4
+            flicker0 > Flicker limit=3 img=oryx/fire1
+
+        spawnpoint1 > SpawnPoint cooldown=2 stype=missile0 img=newset/hole1 prob=0.05 portal=true
+            spawnpoint2 > stype=missile0
+            spawnpoint3 > stype=missile1
+        parent4  >
+            missile0 > Missile img=oryx/planet1 speed=0.5 orientation=LEFT
+            missile1 > Missile img=oryx/planet1 speed=0.5 orientation=RIGHT
+
+        spawnpoint4 > SpawnPoint cooldown=5 invisible=true prob=0.05 stype=flicker1 hidden=True
+        flicker1 > Flicker limit=5 img=oryx/spike2
+
+        spawnpoint5 > SpawnPoint
+            spawnpoint6 > img=newset/lasercannon stype=missile3
+            spawnpoint7 > img=newset/lasercannon_2 stype=missile4
+            spawnpoint8 > img=newset/lasercannon_1 stype=missile5
+            spawnpoint9 > img=newset/lasercannon_3 stype=missile6
+            spawnpoint10 > img=newset/lasercannon_4 stype=missile6
+        immovable2 > Immovable img=newset/lasercannon_4
+
+        missile2 > Missile color=YELLOW  shrinkfactor=0.5 speed=0.5
+            missile3 > orientation=UP img=newset/laser1
+            missile4 > orientation=DOWN img=newset/laser1
+            missile5 > orientation=RIGHT img=newset/laser1_1
+            missile6 > orientation=LEFT img=newset/laser1_1
+
+        movingavatar0 > MovingAvatar healthPoints=10 img=oryx/rogue
+        immovable3 > Immovable img=oryx/wall3 autotiling=True
+
+    LevelMapping
+        x > door0 immovable0
+        g > resource0 immovable0
+        A > movingavatar0 immovable0
+        k > resource1 immovable0
+        m > immovable1 immovable0
+
+        f > spawnpoint0 immovable0
+        1 > spawnpoint3 immovable0
+        2 > spawnpoint2 immovable0
+        t > spawnpoint4 immovable0
+
+        l > spawnpoint9 immovable0
+        r > spawnpoint8 immovable0
+        u > spawnpoint6 immovable0
+        d > spawnpoint7 immovable0
+        . > immovable0
+
+    InteractionSet
+
+        resource0 movingavatar0     > killSprite scoreChange=1
+        resource1 movingavatar0      > collectResource
+
+        movingavatar0 immovable3 spawnpoint1 > stepBack
+        immovable1 movingavatar0 > killIfOtherHasMore resource=resource1 limit=1
+        movingavatar0 immovable1 > stepBack
+
+        door0 movingavatar0 > killSprite scoreChange=10
+        movingavatar0 flicker0 > subtractHealthPoints
+
+        flicker0 movingavatar0 immovable3 parent0 parent1 > killSprite
+
+        movingavatar0 parent4 > killSprite
+        parent4 immovable3 parent0 parent1 > killSprite
+
+        movingavatar0 flicker1 > subtractHealthPoints value=2
+
+        spawnpoint5 movingavatar0 > transformTo stype=immovable2 scoreChange=2
+        movingavatar0 immovable2 spawnpoint5 > stepBack
+
+        movingavatar0 missile2 > subtractHealthPoints
+        missile2 immovable3 parent0 parent1 > killSprite
+
+    TerminationSet
+        SpriteCounter stype=movingavatar0 limit=0 win=False
+        SpriteCounter stype=door0 limit=0 win=True

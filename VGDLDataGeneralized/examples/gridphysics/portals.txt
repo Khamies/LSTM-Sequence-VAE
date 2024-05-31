@@ -1,0 +1,45 @@
+BasicGame
+    SpriteSet
+        immovable0 > Immovable img=oryx/backBiege
+
+        immovable1 > color=RED img=oryx/bullet1
+            immovable2  > Immovable
+            randomnpc0   > RandomNPC speed=0.25 cons=1
+            missile0 > Missile   speed=0.5 img=oryx/bullet2
+                missile1   > orientation=UP
+                missile2 > orientation=LEFT
+        immovable3 > Immovable
+            immovable4  > color=GREEN img=oryx/door2
+            portal0 > Portal img=oryx/circleEffect1
+                portal1 > stype=parent1 color=LIGHTBLUE
+                portal2 > stype=parent2 color=BLUE
+            parent0  > color=BROWN img=oryx/explosion2
+                parent1  >
+                parent2  >
+        movingavatar0 > MovingAvatar img=oryx/mage1
+        immovable5 > Immovable img=oryx/dirtwall autotiling=True
+    InteractionSet
+        randomnpc0 immovable5 immovable3     > stepBack
+        movingavatar0 immovable5      > stepBack
+        immovable4   movingavatar0    > killSprite scoreChange=1
+        movingavatar0 immovable1    > killSprite
+        missile0 immovable5    > reverseDirection
+        movingavatar0 portal0 > teleportToExit
+
+    TerminationSet
+        SpriteCounter stype=immovable4   limit=0 win=True
+        SpriteCounter stype=movingavatar0 limit=0 win=False
+
+    LevelMapping
+        h > immovable0 missile2
+        v > immovable0 missile1
+        x > immovable0 immovable2
+        r > immovable0 randomnpc0
+        g > immovable0 immovable4
+        i > immovable0 portal1
+        2 > immovable0 portal2
+        o > immovable0 parent1
+        3 > immovable0 parent2
+        w > immovable0 immovable5
+        A > immovable0 movingavatar0
+        + > floor

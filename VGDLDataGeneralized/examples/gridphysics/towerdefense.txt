@@ -1,0 +1,120 @@
+BasicGame key_handler=Pulse square_size=30
+    SpriteSet
+        immovable0 > Immovable img=oryx/grass autotiling=True hidden=True
+        immovable1 > Immovable img=oryx/space1 hidden=True
+
+        immovable2 > Immovable img=oryx/dirtWall
+            parent0 >
+            parent1 >
+        spawnpointmultisprite0 > SpawnPointMultiSprite prob=0.8 cooldown=20
+            spawnpointmultisprite1 > stypes=missileL,missileR color=PINK img=newset/lasercannon_1
+            spawnpointmultisprite2 > stypes=missileU,missileD color=PINK img=newset/lasercannon
+
+        parent2 >
+            shootavatar0 > ShootAvatar stype=flicker0 img=newset/shooter1
+            missile0 > Missile
+                missile1 > healthPoints=5 speed=0.15 shrinkfactor=0.7 img=newset/redthug color=RED
+                    missile2 > orientation=UP
+                    missile3 > orientation=DOWN
+                    missile4 > orientation=LEFT
+                    missile5 > orientation=RIGHT
+                parent3 > healthPoints=10 speed=0.07 img=newset/bossthug color=BROWN
+                    parent4 > orientation=UP
+                    parent5 > orientation=DOWN
+                    parent6 > orientation=LEFT
+                    parent7 > orientation=RIGHT
+
+        spawnpoint0 > SpawnPoint invisible=True hidden=True
+            spawnpoint1 > prob=1 cooldown=50
+                spawnpoint2 > stype=missile2
+                spawnpoint3 > stype=missile3
+                spawnpoint4 > stype=missile4
+                spawnpoint5 > stype=missile5
+            parent8 > prob=1 cooldown=500
+                parent9 > stype=parent4
+                parent10 > stype=parent5
+                parent11 > stype=parent6
+                parent12 > stype=parent7
+
+        immovable3 > Immovable invisible=True hidden=True
+            immovable4 > orientation=UP img=dirt
+            immovable5 > orientation=DOWN img=dirt
+            immovable6 > orientation=LEFT img=dirt
+            immovable7 > orientation=RIGHT img=dirt
+
+        missile6 > Missile shrinkfactor=0.2 timeToLive=20 speed=0.2
+            missile7 > orientation=LEFT img=oryx/orb1
+            missile8 > orientation=RIGHT img=oryx/orb1
+            missile9 > orientation=UP img=oryx/orb3
+            missile10 > orientation=DOWN img=oryx/orb3
+
+        flicker0 > Flicker
+
+        immovable8 > Immovable img=oryx/cloak2 healthPoints=10 color=LIGHTBLUE
+
+        immovable9 > Immovable img=oryx/wall1
+
+    LevelMapping
+        . > immovable0
+        p > immovable0 immovable1
+        h > immovable0 parent0
+        v > immovable0 parent1
+        w > immovable9 immovable0
+
+        1 > immovable0 spawnpoint2 immovable1
+        2 > immovable0 spawnpoint3 immovable1
+        3 > immovable0 spawnpoint4 immovable1
+        4 > immovable0 spawnpoint5 immovable1
+
+        A > immovable0 shootavatar0
+
+        u > immovable0 immovable4
+        l > immovable0 immovable6
+        d > immovable0 immovable5
+        r > immovable0 immovable7
+
+        t > immovable0 immovable8
+
+
+    InteractionSet
+        spawnpoint2 TIME > spawn stype=parent9 timer=50
+        spawnpoint3 TIME > spawn stype=parent10 timer=50
+        spawnpoint4 TIME > spawn stype=parent11 timer=50
+        spawnpoint5 TIME > spawn stype=parent12 timer=50
+
+        parent2 immovable9 spawnpointmultisprite0 > stepBack
+        shootavatar0 immovable8 > stepBack
+        missile6 immovable9 > killSprite
+
+        missile1 immovable5 > transformTo stype=missile3
+        missile1 immovable4 > transformTo stype=missile2
+        missile1 immovable7 > transformTo stype=missile5
+        missile1 immovable6 > transformTo stype=missile4
+        missile1 immovable3 > stepBack pixelPerfect=True
+
+        parent3 immovable5 > transformTo stype=parent5
+        parent3 immovable4 > transformTo stype=parent4
+        parent3 immovable7 > transformTo stype=parent7
+        parent3 immovable6 > transformTo stype=parent6
+        parent3 immovable3 > stepBack pixelPerfect=True
+
+        parent0 shootavatar0 > transformTo stype=spawnpointmultisprite1 scoreChange=1
+        parent1 shootavatar0 > transformTo stype=spawnpointmultisprite2 scoreChange=1
+
+        spawnpointmultisprite1 flicker0 > transformTo stype=parent1 killSecond=True scoreChange=-1
+        spawnpointmultisprite2 flicker0 > transformTo stype=parent0 killSecond=True scoreChange=-1
+
+        spawnpointmultisprite1 missile9 missile10 > transformTo stype=parent0 killSecond=True scoreChange=-2
+        spawnpointmultisprite2 missile7 missile8 > transformTo stype=parent1 killSecond=True scoreChange=-2
+
+        immovable8 missile0 > subtractHealthPoints value=1 scoreChange=-10
+        missile1 immovable8 > killSprite scoreChange=9 #boss is guaranteed to kill the immovable8 if it reaches it; -1 point only if missile1 missile0 hits immovable8
+
+        missile1 missile6 > subtractHealthPoints value=1 scoreChangeIfKilled=5
+        parent3 missile6 > subtractHealthPoints value=1 scoreChangeIfKilled=50
+        missile6 missile0 > killSprite
+        spawnpointmultisprite0 turret > killSprite
+
+    TerminationSet
+        SpriteCounter stype=immovable8 limit=0 win=False
+        Timeout limit=1500 win=True

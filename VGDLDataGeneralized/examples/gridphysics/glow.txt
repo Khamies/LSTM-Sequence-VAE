@@ -1,0 +1,40 @@
+BasicGame key_handler=Pulse
+    SpriteSet
+        immovable0 > Immovable img=newset/floor6 hidden=True
+        immovable1 > Immovable img=oryx/space1 hidden=True
+        shootavatar0 > ShootAvatar img=newset/man3 frameRate=8 stype=spreader0
+
+        immovable2 > Immovable img=oryx/space1
+        immovable3 > Immovable
+            immovable4 > invisible=True hidden=True
+            immovable5 > invisible=False hidden=False img=newset/dock2
+
+        immovable6 > Immovable img=newset/exit2
+
+        immovable7 > img=oryx/sparkle3
+            spreader0  > Spreader color=ORANGE spreadprob=1 stype=flicker0
+            flicker0 > Flicker
+
+        immovable8 > Immovable color=BLACK img=oryx/wall3 autotiling=True
+
+
+    LevelMapping
+        . > immovable0
+        A > shootavatar0 immovable0
+        t > immovable2 immovable0
+        b > immovable4 immovable2 immovable1
+        e > immovable6 immovable0
+
+    InteractionSet
+        shootavatar0 immovable8 EOS > stepBack
+
+        immovable4 immovable7 > transformTo stype=immovable5
+        immovable2 immovable5 > killSprite
+
+        shootavatar0 immovable2 > killSprite
+        immovable6 shootavatar0 > killSprite
+
+    TerminationSet
+        SpriteCounter stype=shootavatar0 win=False
+        SpriteCounter stype=immovable6 win=True
+        Timeout limit=1500 win=True

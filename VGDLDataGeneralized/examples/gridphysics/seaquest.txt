@@ -1,0 +1,53 @@
+BasicGame
+    SpriteSet
+
+        immovable0   > Immovable img=oryx/backLBlue
+        immovable1 > Immovable img=newset/water2
+        immovable2 > Immovable color=LIGHTGREEN
+        spawnpoint0 > SpawnPoint color=LIGHTGRAY img=newset/whirlpool2 portal=True
+            spawnpoint1  >  stype=missile1  prob=0.01
+            spawnpoint2  >  stype=bomber0  prob=0.005
+            spawnpoint3  >  stype=randomnpc0
+                spawnpoint4 > prob=0.005
+                spawnpoint5  > prob=0.025
+
+        parent0 >
+            shootavatar0  > ShootAvatar color=YELLOW  stype=missile0 img=newset/submarine healthPoints=18 limitHealthPoints=20
+            missile0 > Missile color=YELLOW img=oryx/bullet1
+            parent1 >
+                missile1  > Missile orientation=LEFT  speed=0.25 color=ORANGE img=newset/shark2
+                bomber0  > Bomber  orientation=RIGHT  speed=0.1 color=BROWN stype=missile2 prob=0.02 img=newset/whale
+                missile2 > Missile orientation=RIGHT speed=0.25 color=RED shrinkfactor=0.6 img=newset/piranha2
+            randomnpc0 > RandomNPC color=GREEN speed=0.5 img=newset/diver1 cons=2
+
+        resource0  > Resource color=GREEN limit=4
+
+    InteractionSet
+
+        shootavatar0 TIME > subtractHealthPoints timer=26 repeating=True
+
+        EOS shootavatar0 randomnpc0 immovable0   > stepBack
+        parent1 EOS  > killSprite #Note that from vgdl 2.0, EOS can be the first or the second sprite.
+
+        parent1 missile0 > killBoth scoreChange=1
+        shootavatar0 parent1  > killSprite
+
+        shootavatar0 immovable0 > addHealthPoints value=1
+        shootavatar0 immovable0 > spawnIfHasMore resource=resource0 stype=immovable2 limit=4 spend=4
+        immovable2  immovable0 > killSprite scoreChange=1000
+
+        shootavatar0 randomnpc0 > changeResource resource=resource0
+        randomnpc0 shootavatar0 > killSprite
+
+    LevelMapping
+        a > immovable0
+        A > immovable1 shootavatar0
+        1 > immovable1 spawnpoint1
+        2 > immovable1 spawnpoint2
+        3 > immovable1 spawnpoint4
+        4 > immovable1 spawnpoint5
+        . > immovable1
+
+    TerminationSet
+        SpriteCounter      stype=shootavatar0               limit=0 win=False
+        Timeout limit=1000 win=True

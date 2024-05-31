@@ -1,0 +1,26 @@
+BasicGame
+    SpriteSet
+        immovable0 > Immovable img=oryx/grass autotiling=True hidden=True
+        immovable1 > Immovable color=BLUE img=newset/cocoonb2
+        parent0 > 
+            movingavatar0    > MovingAvatar img=oryx/angel1 frameRate=8
+            randomnpc0 > RandomNPC speed=0.6 img=newset/butterfly1 cons=1 frameRate=5
+
+        immovable2 > Immovable img=oryx/tree2
+
+    TerminationSet
+        SpriteCounter stype=randomnpc0 win=True
+        SpriteCounter stype=immovable1    win=False
+
+    InteractionSet
+        parent0    immovable2   > stepBack
+        randomnpc0 movingavatar0 > killSprite scoreChange=2
+        randomnpc0 immovable1 > cloneSprite
+        immovable1 randomnpc0 > killSprite
+
+    LevelMapping
+        1 > immovable0 randomnpc0
+        0 > immovable0 immovable1
+        A > immovable0 movingavatar0
+        . > immovable0
+        w > immovable0 immovable2

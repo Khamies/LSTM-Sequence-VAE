@@ -1,0 +1,27 @@
+BasicGame
+    SpriteSet
+        immovable0 > Immovable color=LIGHTGRAY img=oryx/backOBrown
+        spawnpoint0 > SpawnPoint portal=True
+            spawnpoint1 > stype=flicker2 color=WHITE prob=0.002 img=newset/hole1
+            spawnpoint2  > stype=flicker1 color=GRAY prob=0.01 img=newset/hole4
+        parent0 >
+            randomnpc0 > RandomNPC color=RED img=newset/cat cons=2 shrinkfactor=0.5
+            movingavatar0  > MovingAvatar img=oryx/cyclop1
+        flicker0 > Flicker shrinkfactor=0.7
+            flicker1 > color=BLUE limit=20 img=newset/mole_fast
+            flicker2  > color=GREEN  limit=60 img=newset/mole_slow
+
+    LevelMapping
+        0 > immovable0 spawnpoint2
+        1 > immovable0 spawnpoint1
+        2 > immovable0 randomnpc0
+        A > immovable0 movingavatar0
+
+    TerminationSet
+        Timeout limit=500 win=True
+        SpriteCounter  stype=movingavatar0  limit=0 win=False
+
+    InteractionSet
+        parent0  EOS  > stepBack
+        flicker0 movingavatar0 randomnpc0 > killSprite scoreChange=1
+        movingavatar0 randomnpc0 > killSprite scoreChange=-5

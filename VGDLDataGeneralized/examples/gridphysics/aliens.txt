@@ -1,0 +1,38 @@
+BasicGame square_size=32
+    SpriteSet
+        immovable0 > Immovable img=oryx/space1 hidden=True
+        immovable1    > Immovable    color=WHITE img=oryx/planet
+        flakavatar0  > FlakAvatar   stype=missile1 img=oryx/spaceship1
+        missile0 > Missile
+            missile1  > orientation=UP    color=BLUE singleton=True img=oryx/bullet1
+            missile2 > orientation=DOWN  color=RED  speed=0.5 img=oryx/bullet2
+        bomber0   > Bomber       stype=missile2   prob=0.01  cooldown=3 speed=0.8
+            bomber1 > img=oryx/alien3
+            bomber2 > img=oryx/alien1
+        parent0  > invisible=True hidden=True
+        	spawnpoint0  > SpawnPoint   stype=bomber2  cooldown=16   total=20 img=parent0
+        	spawnpoint1  > SpawnPoint   stype=bomber1  cooldown=12   total=20 img=parent0
+
+    LevelMapping
+        . > immovable0
+        0 > immovable0 immovable1
+        1 > immovable0 spawnpoint0
+        2 > immovable0 spawnpoint1
+        A > immovable0 flakavatar0
+
+    TerminationSet
+        SpriteCounter      stype=flakavatar0               limit=0 win=False
+        MultiSpriteCounter stype1=parent0 stype2=bomber0 limit=0 win=True
+
+    InteractionSet
+        flakavatar0  EOS  > stepBack
+        bomber0   EOS  > turnAround
+        missile0 EOS  > killSprite
+
+        immovable1 missile2 > killBoth
+        immovable1 missile1 > killBoth scoreChange=1
+
+        immovable1   bomber0 > killSprite
+        flakavatar0 bomber0 > killSprite scoreChange=-1
+        flakavatar0 missile2  > killSprite scoreChange=-1
+        bomber0  missile1   > killSprite scoreChange=2

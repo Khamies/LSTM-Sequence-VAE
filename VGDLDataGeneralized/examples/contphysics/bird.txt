@@ -1,0 +1,22 @@
+BasicGame
+    SpriteSet 
+        none0 > physicstype=CONT gravity=1.0 BirdAvatar img=newset/chickenr_0
+        immovable0   >  Immovable color=RED
+        immovable1 > Immovable color=GREEN
+        immovable2 > Immovable img=oryx/gold2
+            
+    TerminationSet
+        SpriteCounter stype=immovable1  limit=11 win=True
+        SpriteCounter stype=none0    win=False
+           
+    InteractionSet
+        none0 EOS  > killSprite
+        immovable1 none0 > killSprite
+        none0 wall > wallStop
+        none0 immovable0 > killSprite
+        immovable2 none0 > killSprite scoreChange=1
+        
+    LevelMapping
+        G > immovable1
+        1 > immovable0
+        c > coin

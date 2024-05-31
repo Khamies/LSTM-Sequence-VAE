@@ -1,0 +1,51 @@
+#Solar Fox: http://www.mobygames.com/game/atari-2600/solar-fox
+
+BasicGame square_size=25
+    SpriteSet
+        immovable0 > Immovable img=oryx/backGrey
+        immovable1 > Immovable img=newset/water
+        ongoingavatar0  > OngoingAvatar color=YELLOW img=oryx/spaceship1 speed=0.15
+        passive0 > Passive img=oryx/diamond3
+        flicker0 > Flicker limit=8 img=oryx/sparkle4
+        passive1 > Passive img=oryx/diamond1
+        missile0 > Missile cooldown=3 img=oryx/necromancer1
+            missile1 > orientation=RIGHT shrinkfactor=1
+            missile2 > orientation=LEFT shrinkfactor=1
+        missile3 > Missile shrinkfactor=0.7
+            missile4 > orientation=UP speed=0.15 img=oryx/fireup1
+            missile5 > orientation=DOWN speed=0.15 img=oryx/firedown1
+        resource0 > Resource color=GREEN value=0 limit=4 img=oryx/diamond2
+        immovable2 > Immovable img=oryx/wall3 autotiling=True
+        
+
+    LevelMapping
+        b > immovable0 passive1
+        p > immovable0 passive0
+        2 > immovable0 missile1 immovable1
+        1 > immovable0 missile2 immovable1
+        . > immovable1
+        w > immovable2
+        + > immovable0
+        A > immovable0 ongoingavatar0
+ 
+
+    TerminationSet
+        SpriteCounter      stype=ongoingavatar0               limit=0 win=False
+        MultiSpriteCounter      stype1=passive1 stype2=passive0               limit=0 win=True
+
+    InteractionSet
+        ongoingavatar0 immovable2 missile0 immovable1 missile3 > killSprite scoreChange=-10
+
+        passive1 ongoingavatar0 > killSprite scoreChange=1
+
+        passive0 flicker0 > spawnIfHasMore resource=resource0 stype=passive1 limit=2
+        flicker0 ongoingavatar0 > killSprite
+
+        passive0 passive1 > killSprite scoreChange=1
+        passive0 ongoingavatar0 > spawn stype=flicker0
+        passive0 flicker0 > changeResource resource=resource0
+
+        missile0 immovable2 > reverseDirection
+
+        missile2 immovable1 > spawn stype=missile4 prob=0.02
+        missile1 immovable1 > spawn stype=missile5 prob=0.02

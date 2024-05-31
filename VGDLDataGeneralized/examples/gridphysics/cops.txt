@@ -1,0 +1,75 @@
+BasicGame square_size=40
+    SpriteSet
+        immovable0 > Immovable img=oryx/space4 hidden=True
+        immovable1    > Immovable    color=WHITE img=newset/jaildoor1
+        immovable2 > Immovable    color=WHITE img=oryx/key1
+        immovable3    > Immovable    color=WHITE img=newset/jail
+
+        immovable4 > Immovable invisible=True hidden=True
+            parent0 >
+            parent1 >
+            parent2 >
+
+        fleeing0 > Fleeing stype=movingavatar0 speed=0.9
+            fleeing1 > img=newset/redthug frameRate=7
+            fleeing2 > img=newset/greenthug frameRate=9
+            fleeing3 > img=newset/yellowthug frameRate=5
+            fleeing4 > img=newset/bossthug frameRate=12
+
+        resource0 > Resource limit=1 img=resource0 singleton=True color=LIGHTBLUE
+        resource1 > Resource
+            resource2 > color=RED
+            resource3 > color=GREEN
+            resource4 > color=YELLOW
+
+        movingavatar0 > MovingAvatar img=newset/cop2 frameRate=8
+
+        immovable5 > Immovable img=oryx/wall1
+
+
+    LevelMapping
+        . > immovable0
+        0 > immovable0 immovable3
+        1 > immovable0 immovable2
+        d > immovable0 immovable1
+
+        g > immovable0 fleeing2
+        y > immovable0 fleeing3
+        r > immovable0 fleeing1
+        b > immovable0 fleeing4
+
+        A > immovable0 movingavatar0
+
+        
+    InteractionSet
+
+        movingavatar0  immovable5  > stepBack
+        fleeing0 immovable5 immovable1 > stepBack
+
+        resource0 movingavatar0      > collectResource
+        resource0 movingavatar0      > killSprite
+
+        immovable1 movingavatar0 > killIfOtherHasMore resource=resource0 limit=1
+        movingavatar0 immovable1 > changeResource resource=resource0 value=-1
+        movingavatar0 immovable1 > stepBack
+
+        movingavatar0 immovable2 > spawnIfHasLess resource=resource0 limit=0 stype=resource0
+
+        movingavatar0 fleeing1 > changeResource resource=resource2 value=1 killResource=True
+        movingavatar0 fleeing2 > changeResource resource=resource3 value=1  killResource=True
+        movingavatar0 fleeing3 > changeResource resource=resource4 value=1 killResource=True
+
+        movingavatar0 immovable3 > spawnIfHasMore resource=resource3 limit=1 stype=parent1
+        movingavatar0 parent1 > changeResource resource=resource3 value=-1 killResource=True scoreChange=2
+
+        movingavatar0 immovable3 > spawnIfHasMore resource=resource4 limit=1 stype=parent2
+        movingavatar0 parent2 > changeResource resource=resource4 value=-1 killResource=True scoreChange=5
+
+        movingavatar0 immovable3 > spawnIfHasMore resource=resource2 limit=1 stype=parent0
+        movingavatar0 parent0 > changeResource resource=resource2 value=-1 killResource=True scoreChange=100
+
+        fleeing4 movingavatar0 > killSprite scoreChange=100
+
+    TerminationSet
+        Timeout limit=1900 win=False
+        SpriteCounter      stype=fleeing4               limit=0 win=True

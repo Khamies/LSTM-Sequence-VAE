@@ -1,0 +1,37 @@
+BasicGame
+    SpriteSet
+        immovable0 > Immovable img=newset/floor2 hidden=True
+        immovable1 > Immovable img=oryx/smoke
+        door0   > Door color=GREEN img=oryx/dooropen1
+        immovable2    > Immovable color=BROWN img=newset/block3
+        resource0    > Resource color=GREEN limit=3 img=oryx/diamond3 shrinkfactor=0.5
+        missile0 > Missile color=RED speed=0.5 singleton=True img=oryx/bullet1
+        spreader0   > Spreader color=ORANGE spreadprob=0.25 stype=spawnpoint0 img=oryx/fire1
+        spawnpoint0  > SpawnPoint stype=immovable1 total=1 img=oryx/slash1
+        shootavatar0 > ShootAvatar ammo=resource0 stype=missile0 healthPoints=3 img=oryx/devil1 frameRate=8
+
+        immovable3 > Immovable img=oryx/wall3 autotiling=True
+
+    InteractionSet
+        spreader0 immovable2 spreader0  > killSprite
+        resource0 spreader0  > killSprite
+        shootavatar0 immovable3 immovable2 > stepBack
+        resource0 shootavatar0  > collectResource scoreChange=1
+        door0 shootavatar0  > killSprite
+        shootavatar0 spreader0 > subtractHealthPoints scoreChange=-2
+        spreader0 shootavatar0  > killSprite
+        missile0 immovable3  > killSprite
+        missile0 immovable2   > transformTo stype=spreader0 killSecond=True scoreChange=1
+        immovable2    immovable1  > killBoth
+        immovable1 immovable3 shootavatar0   > killSprite
+
+    TerminationSet
+        SpriteCounter stype=shootavatar0 limit=0 win=False
+        SpriteCounter stype=door0   limit=0 win=True
+
+    LevelMapping
+        g > door0 immovable0
+        b > immovable2 immovable0
+        . > resource0 immovable0
+        _ > immovable0
+        A > shootavatar0 floor

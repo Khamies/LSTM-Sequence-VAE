@@ -19,11 +19,11 @@ def plot_elbo(losses, mode):
 
     losses = {"elbo": elbo_loss, "kl": kl_loss, "recon": recon_loss}
     print(losses)
-    for key in losses.keys():
+    """for key in losses.keys():
         plt.plot(losses.get(key), label=key+"_" + mode)
 
     plt.legend()
-    plt.show()
+    plt.show()"""
 
 
 def get_latent_codes(dataloader, model, batch_size):

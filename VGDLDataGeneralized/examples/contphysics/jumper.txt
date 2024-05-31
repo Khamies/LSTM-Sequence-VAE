@@ -1,0 +1,61 @@
+BasicGame
+    SpriteSet
+
+        none0 > solid=True
+            immovable0 > Immovable color=DARKGRAY
+
+        parent0 > physicstype=CONT gravity=2.0
+            platformeravatar0 > PlatformerAvatar img=newset/man1 mass=0.5 friction=0.15 jump_strength=30 healthPoints=20
+
+        missile0 > Missile orientation=LEFT speed=0.4 img=oryx/gold1
+
+        immovable1 > Immovable invisible=True hidden=True
+            parent1 >
+            parent2 >
+
+        spawnpoint0 > SpawnPoint invisible=True hidden=True
+            spawnpoint1 > stype=missile0 prob=0.1 cooldown=5 total=30
+            spawnpoint2 > stype=missile2 cooldown=40 total=10 orientation=LEFT
+            spawnpoint3 > stype=missile2 cooldown=60 total=10 orientation=LEFT
+            spawnpoint4 > stype=missile3 cooldown=120 total=10 orientation=LEFT
+            spawnpoint5 > stype=missile4 prob=1 total=1
+
+        missile1 > Missile speed=0.2
+            missile2 > hMult=2  img=oryx/slime2
+            missile3 > hMult=3  img=oryx/slime1
+
+        missile4 > Missile orientation=LEFT speed=0.2 img=newset/exit2 portal=True
+
+        immovable2 > Immovable solid=False color=DARKGRAY
+
+        immovable3 > Immovable color=RED img=oryx/sparkle2
+            
+    TerminationSet
+        MultiSpriteCounter stype1=immovable3 limit=1 win=True
+        SpriteCounter stype=platformeravatar0 win=False
+
+
+    InteractionSet
+
+        platformeravatar0 TIME > transformToAll stype=parent1 stypeTo=spawnpoint5 nextExecution=300 timer=300 repeating=False
+        platformeravatar0 TIME > transformToAll stype=parent2 stypeTo=spawnpoint5 nextExecution=500 timer=500 repeating=False
+        missile0 platformeravatar0 > killSprite scoreChange=1
+        missile4 platformeravatar0 > killSprite
+        platformeravatar0 immovable2 immovable0 > wallStop
+        platformeravatar0 missile4 > transformTo stype=immovable3
+        platformeravatar0 missile1 > subtractHealthPoints
+
+        missile1 EOS > killSprite
+
+
+
+    LevelMapping
+        g > parent1
+        h > parent2
+        s > spawnpoint2 immovable2
+        t > spawnpoint3 immovable2
+        l > spawnpoint4 immovable2
+        u > spawnpoint3 spawnpoint4 immovable2
+        c > spawnpoint1 immovable2
+        . > immovable0
+        A > avatar

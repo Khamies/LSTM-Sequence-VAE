@@ -1,0 +1,49 @@
+BasicGame
+    SpriteSet
+        immovable0 > Immovable img=oryx/backOBrown
+        immovable1 > Immovable
+            immovable2 > color=BROWN img=oryx/grass autotiling=True
+            immovable3 > color=RED img=oryx/eye1
+            immovable4 > color=GRAY img=oryx/tombstone1 shrinkfactor=0.75
+        bomber0 > Bomber
+            bomber1 > color=GREEN img=oryx/bush4 stype=missile2 prob=0.05 cooldown=2
+            bomber2 > Bomber color=BROWN img=newset/zombie speed=0.1 orientation=LEFT stype=missile1 prob=0.005
+        missile0 > Missile
+            missile1 > orientation=LEFT speed=0.3 color=RED shrinkfactor=0.75 img=oryx/axe2
+            missile2 > orientation=RIGHT speed=0.3 color=GREEN shrinkfactor=0.35 img=oryx/bush1
+        door0 > Door color=GREEN img=oryx/cloak3
+        spawnpoint0 > SpawnPoint portal=True stype=bomber2 color=RED img=oryx/spike3
+            spawnpoint1 > prob=0.01
+            spawnpoint2 > prob=0.005
+        orientedflicker0 > OrientedFlicker limit=2 color=LIGHTGRAY img=oryx/staff1
+        shootavatar0  > ShootAvatar stype=orientedflicker0 img=oryx/rogue
+        immovable5 > Immovable img=oryx/wall6
+
+    InteractionSet
+
+        orientedflicker0 immovable2 > transformTo stype=bomber1 killSecond=True
+        bomber2 door0  > transformTo stype=immovable3 scoreChange=-1
+
+        bomber1 missile1 > transformTo stype=immovable2 killSecond=True
+        bomber2 missile2 > killBoth scoreChange=1
+        missile2 immovable4 > killSprite
+
+        shootavatar0 immovable5 > stepBack
+        bomber2 immovable5  > stepBack
+        missile0 EOS > killSprite
+
+    LevelMapping
+        g > immovable0 door0
+        h > immovable0 spawnpoint2
+        f > immovable0 spawnpoint1
+        z > immovable0 bomber2
+        x > immovable0 immovable2
+        t > immovable0 immovable4
+        A > immovable0 shootavatar0 immovable2
+        w > immovable0 immovable5
+        . > immovable0
+
+    TerminationSet
+        Timeout limit=1000 win=True
+        MultiSpriteCounter stype1=immovable3 limit=1 win=False
+        SpriteCounter stype=shootavatar0 limit=0 win=False

@@ -1,0 +1,62 @@
+BasicGame key_handler=Pulse square_size=50
+
+    SpriteSet
+        immovable0 > Immovable img=newset/floor2 hidden=True
+        movingavatar0 > MovingAvatar img=oryx/knight1
+
+        passive0 > Passive
+            passive1    >  img=newset/block2
+            passive2    >  img=newset/block2
+            passive3    >  img=newset/block2
+            passive4    >  img=newset/block2
+
+        immovable1   > Immovable color=DARKBLUE img=oryx/cspell4
+            parent0 >
+            parent1 >
+            parent2 >
+            parent3 >
+
+        door0 > Door img=oryx/doorclosed1
+            parent4 >
+            parent5 >
+            parent6 >
+            parent7 >
+
+        door1 > Door img=oryx/dooropen1
+
+        immovable2 > Immovable img=oryx/wall3 autotiling=True
+
+    LevelMapping
+        0 > immovable0 parent0
+        1 > immovable0 parent1
+        2 > immovable0 parent2
+        3 > immovable0 parent3
+        * > passive1 immovable0
+        + > passive2 immovable0
+        - > passive3 immovable0
+        / > passive4 immovable0
+        a > parent4 immovable0
+        b > parent5 immovable0
+        c > parent6 immovable0
+        d > parent7 immovable0
+
+        A > movingavatar0 immovable0
+        . > immovable0
+        w > immovable2
+        e > door1 immovable0
+
+    InteractionSet
+        movingavatar0 immovable2 door0 > stepBack
+        passive0 movingavatar0  > bounceForward
+        passive0 immovable2 passive0 door0  > undoAll
+        passive1 parent0 > killAll stype=parent4 scoreChange=1
+        passive2 parent1 > killAll stype=parent5 scoreChange=2
+        passive3 parent2 > killAll stype=parent6 scoreChange=4
+        passive4 parent3 > killAll stype=parent7 scoreChange=8
+        passive0 immovable1 > killBoth
+        door1 movingavatar0 > killSprite scoreChange=16
+
+    TerminationSet
+        SpriteCounter stype=door1    limit=0 win=True
+        Timeout limit=1000 win=False
+

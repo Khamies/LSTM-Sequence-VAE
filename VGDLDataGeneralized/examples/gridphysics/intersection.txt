@@ -1,0 +1,54 @@
+BasicGame
+    SpriteSet
+
+        immovable0 > Immovable img=newset/highway hidden=True
+        immovable1 > Immovable img=newset/highway2 hidden=True
+        immovable2 > Immovable img=newset/street3 hidden=True
+        portal0  > Portal color=GREEN img=newset/exit2 singleton=True portal=True stype=immovable3
+        portal1  > Portal invisible=True singleton=True portal=True stype=immovable3
+        parent0  >
+            missile0  > Missile   orientation=RIGHT 
+                missile1  > speed=0.9  color=ORANGE img=newset/car2R
+                missile2  > speed=0.7  color=RED img=newset/car1R
+            missile3  > Missile   orientation=DOWN
+                missile4  > speed=0.9  color=ORANGE img=newset/car_orangeD
+                missile5  > speed=0.7  color=RED img=newset/car_redD
+
+        immovable3 > Immovable invisible=True
+        immovable4 > Immovable color=BLACK img=oryx/wall1
+        immovable5 > Immovable color=GREEN img=oryx/tree2
+        spawnpoint0 > SpawnPoint stype=portal0 cooldown=16 prob=0.05 total=1 invisible=True hidden=True
+
+        movingavatar0 > MovingAvatar img=newset/man4 healthPoints=5
+
+    LevelMapping
+        t > immovable2 immovable5
+        - > immovable0 missile2
+        x > immovable1 missile4
+        _ > immovable0 missile2
+        l > immovable1 missile4
+
+        i > immovable2 spawnpoint0
+        s > immovable2 immovable3 movingavatar0
+        . > immovable2
+        = > immovable0
+        + > immovable1
+
+    InteractionSet
+
+        portal0 movingavatar0  > killSprite scoreChange=10
+        movingavatar0 portal0 > teleportToExit
+
+        movingavatar0 parent0 > subtractHealthPoints scoreChange=-5
+        movingavatar0 parent0 > spawn stype=portal1
+        portal1 movingavatar0 > killSprite
+        movingavatar0 portal1 > teleportToExit
+
+        movingavatar0 immovable5 immovable4  > stepBack
+        parent0  EOS   > wrapAround
+    
+    TerminationSet
+        Timeout limit=1000 win=True
+        SpriteCounter stype=movingavatar0 limit=0 win=False
+
+

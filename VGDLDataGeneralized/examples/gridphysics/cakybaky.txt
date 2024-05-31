@@ -1,0 +1,47 @@
+BasicGame
+   SpriteSet
+      immovable0 > Immovable img=newset/floor6 hidden=True
+      chaser0 > Chaser img=newset/chef frameRate=8 color=ORANGE stype=orientedavatar0 speed=0.1 maxDistance=200
+
+      immovable1 > Immovable img=newset/table1
+      resource0 > Resource shrinkfactor=0.9
+         resource1 > img=newset/flour limit=1
+         resource2 > img=newset/milk  limit=1
+         resource3 > img=newset/egg limit=1
+         resource4 > img=newset/sugar limit=1
+         resource5 > img=newset/butter limit=1
+         resource6 > img=newset/cherries limit=1
+
+      orientedavatar0 > OrientedAvatar img=newset/man4 rotateInPlace=false frameRate=8
+      immovable2 > Immovable color=BLACK img=newset/floor4
+    
+   LevelMapping
+      1 > resource1 immovable0
+      2 > resource2 immovable0
+      3 > resource3 immovable0
+      4 > resource4 immovable0
+      5 > resource5 immovable0
+      6 > resource6 immovable0
+      t > immovable1 immovable0
+      C > orientedavatar0 resource1 resource2 immovable0
+      A > orientedavatar0 immovable0
+      c > chaser0 immovable0
+      . > immovable0
+           
+   TerminationSet
+      Timeout limit=1500 win=False
+      SpriteCounter stype=orientedavatar0 win=False
+      SpriteCounter stype=resource6 limit=0 win=True
+        
+   InteractionSet
+      orientedavatar0  immovable2 immovable1  > stepBack
+      chaser0  immovable2 immovable1  > stepBack
+
+      orientedavatar0 chaser0 > killSprite scoreChange=-1
+
+      resource1 orientedavatar0 > collectResource scoreChange=1
+      resource2 orientedavatar0 > collectResourceIfHeld heldResource=resource1 scoreChange=1
+      resource3 orientedavatar0 > collectResourceIfHeld heldResource=resource2 scoreChange=1
+      resource4 orientedavatar0 > collectResourceIfHeld heldResource=resource3 scoreChange=1
+      resource5 orientedavatar0 > collectResourceIfHeld heldResource=resource4 scoreChange=1
+      resource6 orientedavatar0 > collectResourceIfHeld heldResource=resource5 scoreChange=1

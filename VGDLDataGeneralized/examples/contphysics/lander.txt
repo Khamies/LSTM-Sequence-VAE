@@ -1,0 +1,18 @@
+BasicGame
+    SpriteSet 
+        passive0    > Passive color=BLUE is_static=True
+        landeravatar0 > LanderAvatar physicstype=CONT img=oryx/spaceship3 angle_diff=0.2 gravity=0.3 speed=0.5
+            
+    TerminationSet
+        SpriteCounter stype=passive0 limit=4 win=True     
+        SpriteCounter stype=landeravatar0      win=False     
+           
+    InteractionSet
+        landeravatar0 wall > killSprite 
+        landeravatar0 EOS > killSprite 
+        landeravatar0 passive0 > killIfNotUpright
+        passive0 landeravatar0  > killIfSlow limspeed=10
+        landeravatar0 passive0 > killSprite
+        
+    LevelMapping
+        G > pad

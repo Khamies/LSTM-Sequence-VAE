@@ -1,0 +1,33 @@
+BasicGame
+    SpriteSet
+
+        immovable0 > Immovable img=newset/floor6 hidden=True
+        parent0 >
+            randomnpc0 > RandomNPC speed=0.25 img=newset/cursedman cons=2
+            parent1 >
+                randomnpc1 > RandomNPC speed=0.25 img=newset/man2 cons=1
+                shootavatar0 > ShootAvatar stype=flicker0 img=newset/girl1 rotateInPlace=False
+
+        chaser0 > Chaser stype=parent1 speed=0.25 img=newset/man4 frameRate=8
+        flicker0 > Flicker limit=5 singleton=True img=newset/cigarette
+        immovable1 > Immovable img=oryx/wall6
+
+
+    TerminationSet
+        SpriteCounter stype=shootavatar0  win=False
+        SpriteCounter stype=randomnpc1   win=False
+        Timeout limit=1000 win=True
+
+    InteractionSet
+
+        randomnpc1 chaser0 > transformTo stype=randomnpc0
+        shootavatar0 chaser0 > killSprite scoreChange=-1
+        randomnpc0 flicker0 > transformTo stype=randomnpc1 scoreChange=1
+        parent0 immovable1 wall > stepBack
+
+
+    LevelMapping
+        g > immovable0 chaser0
+        c > immovable0 randomnpc1
+        A > immovable0 shootavatar0
+        . > floor

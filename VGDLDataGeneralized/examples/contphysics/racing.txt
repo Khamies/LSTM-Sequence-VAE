@@ -1,0 +1,19 @@
+BasicGame
+    SpriteSet    
+        immovable0    > Immovable color=BLUE 
+        immovable1 > physicstype=CONT friction=0.02
+            caravatar0 > CarAvatar img=newset/car_redR
+        immovable2 > Immovable color=RED
+            
+    TerminationSet
+        SpriteCounter stype=immovable0    win=True     
+        SpriteCounter stype=caravatar0 win=False     
+           
+    InteractionSet
+        immovable1 wall > wallStop
+        immovable0 caravatar0    > killSprite scoreChange=1
+        caravatar0 immovable2 > killSprite
+        
+    LevelMapping
+        G > immovable0
+        F > fire

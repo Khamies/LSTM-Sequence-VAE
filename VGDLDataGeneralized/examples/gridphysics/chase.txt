@@ -1,0 +1,27 @@
+BasicGame
+    SpriteSet
+        immovable0 > Immovable hidden=True img=oryx/grass autotiling=True
+        immovable1 > Immovable color=BROWN img=oryx/worm2 shrinkfactor=0.6
+        immovable2 > stype=movingavatar0
+            chaser0  > Chaser  color=ORANGE img=oryx/bird3
+            fleeing0 > Fleeing color=BLUE img=oryx/bird1
+        movingavatar0 > MovingAvatar img=oryx/princess1
+        immovable3 > Immovable img=oryx/tree2
+
+    InteractionSet
+        immovable2   immovable3 immovable2   > stepBack
+        movingavatar0 immovable3    > stepBack
+        movingavatar0  chaser0  > killSprite scoreChange=-1
+        immovable1 fleeing0 > killSprite
+        fleeing0 movingavatar0  > transformTo stype=immovable1 scoreChange=1
+        fleeing0 immovable1 > transformTo stype=chaser0
+
+    LevelMapping
+        0 > fleeing0 immovable0
+        . > immovable0
+        A > immovable0 movingavatar0
+        w > immovable0 immovable3
+
+    TerminationSet
+        SpriteCounter stype=fleeing0 win=True
+        SpriteCounter stype=movingavatar0 win=False

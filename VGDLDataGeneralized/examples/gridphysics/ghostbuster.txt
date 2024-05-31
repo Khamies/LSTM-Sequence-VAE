@@ -1,0 +1,45 @@
+BasicGame obs=immovable1
+    SpriteSet
+        immovable0 > Immovable randomtiling=0.5 img=oryx/floor3 hidden=True
+        spawnpoint0 > SpawnPoint stype=pathchaser0 img=newset/hole1 portal=True total=10
+        parent0 > 
+            shootavatar0 > ShootAvatar orientation=LEFT stype=missile0 img=newset/humanShotgun
+            pathchaser0 > PathChaser singleton=True stype=randomnpc0 img=oryx/ghost1 cooldown=4
+            parent1 >
+                randomnpc0 > RandomNPC speed=0.5 img=newset/man4
+                pathchaser1 > PathChaser stype=door0 img=newset/cursedman cooldown=2
+
+        missile0 > Missile img=oryx/orb1 shrinkfactor=0.4 timeToLive=15
+        immovable1 > Immovable autotiling=True img=oryx/wall3
+        door0 > Door img=oryx/dooropen1
+
+    LevelMapping
+        . > immovable0
+        A > shootavatar0 immovable0
+        g > spawnpoint0 immovable0
+        e > door0 immovable0
+        w > immovable1 immovable0
+        c > randomnpc0 immovable0
+        f > pathchaser1
+
+    InteractionSet
+        shootavatar0 immovable1 EOS > stepBack pixelPerfect=True
+        pathchaser0 immovable1 > stepBack pixelPerfect=True
+        parent1 immovable1 > stepBack pixelPerfect=True
+        randomnpc0 door0 > stepBack pixelPerfect=True
+
+        pathchaser0 missile0 > killBoth scoreChange=10
+        shootavatar0 pathchaser0 > killSprite scoreChange=-100
+        missile0 immovable1 EOS > killSprite
+
+        randomnpc0 pathchaser0 > align
+        randomnpc0 pathchaser0 > transformTo stype=pathchaser1 scoreChange=-1
+        pathchaser1 shootavatar0 > transformTo stype=randomnpc0 scoreChange=1
+
+        pathchaser1 door0 > killSprite scoreChange=-10
+
+
+    TerminationSet
+        MultiSpriteCounter stype1=spawnpoint0 stype2=pathchaser0 limit=0 win=True
+        SpriteCounter stype=shootavatar0 limit=0 win=False
+        SpriteCounter stype=parent1 limit=0 win=False

@@ -1,0 +1,76 @@
+BasicGame key_handler=Pulse
+    SpriteSet
+        immovable0 > Immovable img=oryx/floor3 hidden=True
+        immovable1 > Immovable img=oryx/seaWater
+        immovable2 > Immovable img=oryx/backLBrown
+        immovable3 > Immovable img=newset/block3
+
+        spawnpoint0 > SpawnPoint
+            spawnpoint1 > img=newset/lasercannon stype=missile1
+            spawnpoint2 > img=newset/lasercannon_2 stype=missile2
+            spawnpoint3 > img=newset/lasercannon_1 stype=missile3
+            spawnpoint4 > img=newset/lasercannon_3 stype=missile4
+            spawnpoint5 > img=newset/lasercannon_4 stype=missile4
+        missile0 > Missile shrinkfactor=0.5 speed=0.5 color=YELLOW
+            missile1 > orientation=UP img=newset/laser1
+            missile2 > orientation=DOWN img=newset/laser1
+            missile3 > orientation=RIGHT img=newset/laser1_1
+            missile4 > orientation=LEFT img=newset/laser1_1
+
+        door0   > Door color=GREEN img=oryx/dooropen1
+        missile5 > Missile img=newset/bomb shrinkfactor=0.8 speed=0.8
+
+        parent0 >
+            spreader0 > Spreader color=ORANGE spreadprob=1.0 stype=immovable4 img=oryx/fire1
+            immovable4 > Immovable img=oryx/fire1
+
+        spawnpoint6  > SpawnPoint stype=spreader0 total=1 shrinkfactor=0.6 img=oryx/slash1
+        passive0 > Passive img=newset/bomb singleton=True
+        shootavatar0  > ShootAvatar stype=passive0 healthPoints=10 img=oryx/spelunky frameRate=8
+        immovable5 > Immovable img=oryx/wall3 autotiling=True
+
+    LevelMapping
+        g > door0 immovable0
+        e > immovable3 immovable0
+        b > passive0 immovable0
+        , > immovable0
+        . > immovable1
+        A > shootavatar0 immovable0
+        1 > spawnpoint1 immovable0
+        2 > spawnpoint3 immovable0
+        3 > spawnpoint2 immovable0
+        4 > spawnpoint4 immovable0
+
+
+    InteractionSet
+        shootavatar0 immovable5 immovable3 > stepBack
+        shootavatar0 immovable1 > killSprite
+
+        door0 shootavatar0 > killSprite
+
+        passive0 shootavatar0  > transformTo stype=missile5
+        passive0 shootavatar0 immovable3 immovable1 > killSprite
+
+        missile5 shootavatar0 missile0 > attractGaze
+
+        missile5 immovable5 immovable3 spawnpoint0 > transformTo stype=spawnpoint6
+
+        missile0 immovable3 EOS door0 immovable5 > killSprite
+
+        immovable3 parent0 > killSprite scoreChange=1
+        immovable1 parent0 > transformTo stype=immovable2
+        passive0 parent0 > transformTo stype=spawnpoint6
+
+        parent0 immovable3 > transformTo stype=spawnpoint6
+        parent0 immovable5 immovable1 passive0 > killSprite
+
+        shootavatar0 parent0 > subtractHealthPoints
+
+        immovable4 immovable0 immovable2 > killSprite
+
+
+
+    TerminationSet
+        SpriteCounter stype=shootavatar0 limit=0 win=False
+        SpriteCounter stype=door0   limit=0 win=True
+        Timeout limit=1000 win=False

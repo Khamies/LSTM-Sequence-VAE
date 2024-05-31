@@ -1,0 +1,69 @@
+BasicGame
+    SpriteSet
+        immovable0 > Immovable hidden=True
+            immovable1 > color=LIGHTBLUE img=oryx/backLBlue
+            immovable2 > color=BLUE img=oryx/seaWater
+            immovable3 > img=oryx/backGrey
+
+        randomnpc0   > RandomNPC    color=WHITE img=newset/satellite cons=1
+        shootavatar0   > ShootAvatar orientation=DOWN color=YELLOW ammo=resource0 stype=missile2 img=newset/helicopter rotateInPlace=False
+        missile0 > Missile
+            missile1  > orientation=UP color=BLUE speed=0.25 img=oryx/bullet1
+            missile2 > orientation=DOWN color=RED speed=0.75 img=newset/bomb singleton=True shrinkfactor=0.5
+
+        missile3  > Missile img=newset/cloud2
+            missile4  > orientation=LEFT speed=0.05  color=WHITE
+            missile5  > orientation=LEFT speed=0.2  color=WHITE
+            missile6  > orientation=RIGHT speed=0.05  color=WHITE
+            missile7  > orientation=RIGHT speed=0.2  color=WHITE
+
+        bomber0   > Bomber stype=missile1  prob=0.03  cooldown=5 speed=0.6 img=newset/tank_blueU
+        spawnpoint0  > SpawnPoint img=oryx/dooropen1 portal=True
+            spawnpoint1  > stype=bomber0  cooldown=40   total=20
+            spawnpoint2  > stype=missile8 cooldown=10 prob=0.15
+
+        missile8 > Missile orientation=LEFT speed=0.25 img=oryx/goldsack shrinkfactor=0.5
+        resource0 > Resource limit=20
+    
+    LevelMapping
+        A > shootavatar0 immovable1
+        c > randomnpc0 immovable2
+        b > spawnpoint1 immovable3
+        a > spawnpoint2 immovable1
+        t > immovable2
+        s > immovable1
+        p > immovable3
+        l > missile4 immovable1
+        d > missile5 immovable1
+        r > missile6 immovable1
+        e > missile7 immovable1
+
+    TerminationSet
+        SpriteCounter      stype=shootavatar0               limit=0 win=False
+        SpriteCounter      stype=randomnpc0               limit=0 win=False
+        MultiSpriteCounter stype1=spawnpoint1 stype2=bomber0 limit=0 win=True
+        
+    InteractionSet
+        shootavatar0 wall EOS > stepBack
+        shootavatar0 missile1 > killSprite
+        missile1 shootavatar0 wall EOS > killSprite
+
+        bomber0 missile2 > killSprite scoreChange=1
+        missile2 bomber0 wall EOS > killSprite
+
+        missile2 missile1 > killBoth
+
+        bomber0 wall EOS  > reverseDirection
+        bomber0 wall EOS  > stepBack
+
+        randomnpc0 missile1 > killBoth scoreChange=-1
+        randomnpc0 wall EOS > stepBack
+
+        shootavatar0 missile8 > changeResource resource=resource0 value=5  killResource=True
+        missile8 wall EOS > killSprite
+
+        shootavatar0 spawnpoint0 immovable2 immovable3 > stepBack
+        randomnpc0 immovable1 > stepBack
+
+        missile3 missile1 > killBoth
+        missile3 EOS > wrapAround

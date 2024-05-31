@@ -1,0 +1,54 @@
+BasicGame
+    SpriteSet
+
+        none0 > solid=True
+            missile0 > Missile orientation=UP speed=0.1 img=newset/floor3
+            passive0    > Passive img=newset/cloud2 physicstype=CONT gravity=1.0 friction=0.02
+            immovable0 > Immovable color=DARKGRAY
+
+        parent0 > physicstype=CONT gravity=1.0
+            platformeravatar0 > PlatformerAvatar img=newset/man1 mass=1 friction=0.1 jump_strength=16
+            platformeravatar1   >  orientation=LEFT gravity=0.5
+                walker0     > Walker img=newset/zombie friction=0.0
+                walkerjumper0 > WalkerJumper img=newset/shark2 mass=1 friction=0.1 jump_strength=5
+
+        immovable1 > Immovable img=oryx/mushroom2
+        immovable2 > Immovable img=oryx/fire1
+        immovable3 > Immovable img=oryx/gold1
+
+        immovable4 > Immovable solid=False color=DARKGRAY
+            
+    TerminationSet
+        SpriteCounter stype=immovable1  win=True
+        SpriteCounter stype=platformeravatar0    win=False
+           
+    InteractionSet
+
+        immovable3 platformeravatar0 > killSprite scoreChange=1
+        platformeravatar1 platformeravatar0 > killIfFromAbove scoreChange=1
+        platformeravatar0 platformeravatar1 > killIfAlive
+        platformeravatar1 EOS  > killSprite
+
+        immovable1 platformeravatar0 > killSprite
+
+        parent0 missile0 > pullWithIt
+        platformeravatar1 immovable4 immovable0 > wallReverse
+
+        missile0 EOS > wrapAround
+
+        passive0 platformeravatar0 > bounceForward
+        passive0 immovable4 immovable0 immovable2 > wallStop
+        platformeravatar0 immovable4 immovable0 > wallStop
+
+        platformeravatar0 passive0 > wallStop
+        platformeravatar0 EOS immovable2 > killSprite
+        
+    LevelMapping
+        G > immovable1
+        1 > walker0
+        2 > walkerjumper0
+        = > missile0
+        l > passive0
+        f > immovable2
+        c > immovable3
+        . > ground

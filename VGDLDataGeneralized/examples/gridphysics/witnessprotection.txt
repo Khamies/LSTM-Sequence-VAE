@@ -1,0 +1,79 @@
+BasicGame square_size=30
+    SpriteSet
+
+        immovable0 > Immovable img=oryx/backBiege hidden=True
+
+        immovable1    > Immovable    color=WHITE img=oryx/wall6
+        shootavatar0  > ShootAvatar stype=missile0 healthPoints=5 img=newset/cop1
+        missile0 > Missile img=oryx/orb3 shrinkfactor=0.5 singleton=True
+
+        immovable2 > Immovable invisible=True hidden=True
+            immovable3 > orientation=LEFT img=dirt
+            immovable4 > orientation=RIGHT img=dirt
+
+        bomber0 > Bomber prob=0.1 cooldown=6 speed=1
+            bomber1 > orientation=LEFT spawnorientation=DOWN stype=missile1 img=newset/bandit1h
+            bomber2 > orientation=RIGHT spawnorientation=UP stype=missile1 img=newset/bandit1
+            bomber3 > orientation=LEFT spawnorientation=UP stype=missile1 img=newset/bandit1h
+            bomber4 > orientation=RIGHT spawnorientation=DOWN stype=missile1 img=newset/bandit1
+
+        missile1 > Missile img=oryx/orb1 shrinkfactor=0.5 speed=0.6
+        door0 > Door
+            door1 > img=oryx/door2
+            door2 > img=oryx/door2
+
+        parent0 > img=newset/girl2
+            chaser0 > Chaser stype=door0 cooldown=5 color=RED speed=0.4
+            immovable5 > Immovable
+
+        immovable6 > Immovable img=oryx/dirtwall autotiling=True
+
+    LevelMapping
+        0 > immovable0 immovable1
+        l > immovable0 bomber1
+        r > immovable0 bomber4
+        . > immovable0 bomber3
+        , > immovable0 bomber2
+        A > immovable0 shootavatar0
+        1 > immovable0 turnup
+        2 > immovable0 immovable3
+        3 > immovable0 turndown
+        4 > immovable0 immovable4
+        n > immovable0 chaser0
+        e > immovable0 door1
+        _ > immovable0
+
+    TerminationSet
+        SpriteCounter      stype=shootavatar0           limit=0 win=False
+        SpriteCounter      stype=parent0          limit=0 win=False
+        SpriteCounter      stype=door0             limit=0 win=True
+        
+    InteractionSet
+
+        shootavatar0  immovable1  > stepBack
+        shootavatar0  immovable6 > stepBack
+
+        immovable1 missile1 > killBoth
+        immovable1 missile0 > killBoth
+        missile1 missile0 > killBoth
+        missile0 immovable6 > killSprite
+
+        missile1 EOS > killSprite
+        missile0 EOS > killSprite
+
+        bomber1 immovable4 > transformTo stype=bomber4
+        bomber3 immovable4 > transformTo stype=bomber2
+        bomber4 immovable3 > transformTo stype=bomber1
+        bomber2 immovable3 > transformTo stype=bomber3
+
+        bomber0 missile0 > killBoth scoreChange=1
+
+
+        shootavatar0 missile1 > subtractHealthPoints
+
+        missile1 shootavatar0 > killSprite
+        missile1 parent0 > killBoth
+
+        door1 parent0 > transformTo stype=door2 scoreChange=5
+        parent0 door2 > transformTo stype=immovable5
+        door2 shootavatar0 > killSprite

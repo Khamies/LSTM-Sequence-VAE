@@ -1,0 +1,26 @@
+BasicGame square_size=30
+    SpriteSet
+        immovable0   > Immovable color=WHITE img=oryx/backGrey
+        immovable1    > Immovable color=LIGHTGREEN img=oryx/floorTileOrange
+        immovable2  > Immovable color=GREEN img=oryx/floorTileGreen
+        flicker0  > Flicker invisible=True
+        parent0 >
+            shootavatar0 > ShootAvatar stype=flicker0 img=oryx/yeti1
+            randomnpc0    > RandomNPC cooldown=5 img=oryx/wolf1 cons=15
+        immovable3 > Immovable img=oryx/dirtwall autotiling=True
+    LevelMapping
+        . > immovable0
+        1 > randomnpc0 immovable1
+        A > shootavatar0 immovable2
+        w > immovable3
+    InteractionSet
+        shootavatar0 randomnpc0 > killSprite
+        shootavatar0 immovable1  > stepBack
+        parent0 immovable3 immovable2 > stepBack
+        immovable0 randomnpc0    > transformTo stype=immovable1
+        immovable0 shootavatar0 > transformTo stype=immovable2 scoreChange=1
+
+    TerminationSet
+        MultiSpriteCounter stype1=flicker0    limit=1 win=True
+        SpriteCounter stype=shootavatar0    limit=0 win=False
+        Timeout limit=1000 win=False

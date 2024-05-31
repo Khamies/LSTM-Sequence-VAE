@@ -1,0 +1,59 @@
+BasicGame square_size=25
+    SpriteSet
+        immovable0 > Immovable hidden=True img=oryx/floor3
+        door0 > Door color=GREEN img=newset/exit2
+
+        flicker0 > Flicker limit=5 singleton=True img=oryx/sword4 shrinkfactor=0.8
+        resource0 > Resource color=BLUE value=10000 limit=10000 img=oryx/sword4 shrinkfactor=0.8
+        resource1 > Resource img=oryx/heart1 shrinkfactor=0.8 limit=10
+
+
+        immovable1 > Immovable img=newset/lock1
+        resource2 > Resource color=GOLD limit=11 img=oryx/gold2 shrinkfactor=0.5
+        resource3 > Resource img=oryx/key2 limit=1 shrinkfactor=0.7
+
+        immovable2 > Immovable img=newset/city1_1
+        immovable3 > Immovable invisible=True
+
+        parent0 >
+            shootavatar0 > ShootAvatar ammo=resource0 stype=flicker0 img=oryx/swordman1 frameRate=8 healthPoints=1 limitHealthPoints=10
+            randomnpc0 > RandomNPC speed=1 cooldown=4 img=oryx/spider2 cons=3
+            chaser0 > Chaser stype=shootavatar0 cooldown=6 speed=0.5 color=BROWN  img=oryx/ghost2
+
+        immovable4 > Immovable img=oryx/wall3 autotiling=True
+
+    InteractionSet
+        resource0 shootavatar0   > collectResource scoreChange=2
+        resource2 shootavatar0     > collectResource scoreChange=1
+        resource3 shootavatar0      > collectResource scoreChange=1
+
+        immovable1 shootavatar0 > killIfOtherHasMore resource=resource3 limit=1
+        parent0 immovable4 immovable1 > stepBack pixelPerfect=True
+
+        door0 shootavatar0 > killSprite scoreChange=10
+
+        shootavatar0 randomnpc0 > subtractHealthPoints value=2
+        randomnpc0 flicker0 > killSprite scoreChange=2
+
+        shootavatar0 chaser0 > subtractHealthPoints value=1
+        chaser0 flicker0 > killSprite scoreChange=1
+
+        shootavatar0 immovable2 > spawnIfHasMore resource=resource2 limit=1 stype=resource1 spend=1
+        shootavatar0 resource1  > addHealthPoints value=1 killSecond=True
+
+    TerminationSet
+        SpriteCounter stype=shootavatar0 limit=0 win=False
+        SpriteCounter stype=door0 limit=0 win=True
+
+    LevelMapping
+        x > door0 immovable0
+        s > resource0 immovable0
+        g > resource2 immovable0
+        r > randomnpc0 immovable0
+        p > chaser0 immovable0
+        h > resource1 immovable0
+        k > resource3 immovable0
+        l > immovable1 immovable0
+        m > immovable2 immovable0
+        A > shootavatar0 immovable0
+        . > floor

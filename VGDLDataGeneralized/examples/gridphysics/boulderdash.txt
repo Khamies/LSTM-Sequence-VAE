@@ -1,0 +1,44 @@
+BasicGame
+	SpriteSet
+		immovable0 > Immovable img=oryx/backBlack hidden=True
+		immovable1 > Immovable autotiling=true img=oryx/dirtWall
+		flicker0 > Flicker color=LIGHTGRAY limit=1 singleton=True img=oryx/pickaxe
+		immovable2 > Immovable color=BROWN img=oryx/backLBrown
+		door0 > Door color=GREEN img=oryx/door2
+		resource0 > Resource color=YELLOW limit=10 shrinkfactor=0.75 img=oryx/diamond3
+		missile0 > Missile orientation=DOWN color=GRAY speed=0.2 img=oryx/mineral1
+		parent0 >
+			shootavatar0  > ShootAvatar   stype=flicker0 frameRate=8 img=oryx/spelunky
+			randomnpc0 > RandomNPC cons=1
+				randomnpc1 > color=RED img=oryx/scorpion2
+				randomnpc2 > color=PINK img=oryx/bat2
+
+	LevelMapping
+		. > immovable0 immovable2
+		- > immovable0
+		e > immovable0 door0
+		o > immovable0 missile0
+		x > immovable0 resource0
+		c > immovable0 randomnpc1
+		b > immovable0 randomnpc2
+		A > immovable0 shootavatar0
+
+	InteractionSet
+		immovable2 shootavatar0 flicker0 > killSprite
+		resource0 shootavatar0 > collectResource  scoreChange=2
+		parent0 immovable1 missile0 > stepBack
+
+		shootavatar0 missile0 > killIfFromAbove scoreChange=-1
+		shootavatar0 randomnpc2 randomnpc1 > killSprite scoreChange=-1
+
+		missile0 immovable2 immovable1 resource0 missile0 > stepBack
+
+		randomnpc0 immovable2 resource0 > stepBack
+
+		randomnpc1 randomnpc2 > killSprite
+		randomnpc2 randomnpc1 > transformTo stype=resource0 scoreChange=1
+		door0 shootavatar0 > killIfOtherHasMore resource=resource0 limit=9
+
+	TerminationSet
+		SpriteCounter stype=shootavatar0 limit=0 win=False
+		SpriteCounter stype=door0 limit=0 win=True

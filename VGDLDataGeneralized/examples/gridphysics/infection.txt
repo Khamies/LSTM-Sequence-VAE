@@ -1,0 +1,36 @@
+BasicGame
+    SpriteSet
+        immovable0 > Immovable img=oryx/backGrey hidden=True
+        flicker0 > Flicker limit=5 singleton=True img=oryx/sword1
+        spawnpoint0 > SpawnPoint total=5 cooldown=100 stype=randomnpc3 img=oryx/dooropen1 portal=True
+        immovable1 > Immovable color=RED img=oryx/slime4 shrinkfactor=0.7
+        parent0 >
+            shootavatar0 > ShootAvatar stype=flicker0
+                 shootavatar1   > color=WHITE img=newset/girl2
+                 shootavatar2  > color=RED img=newset/girl2_c frameRate=8
+            randomnpc0    > RandomNPC speed=0.25  cons=1
+                 randomnpc1     > color=GREEN img=newset/man3
+                 randomnpc2 > color=ORANGE speed=0.5 img=newset/cursedman frameRate=8
+                 randomnpc3 > color=BLUE speed=0.2 img=newset/nurse
+        immovable2 > Immovable img=oryx/wall3 autotiling=True
+
+    TerminationSet
+        SpriteCounter stype=randomnpc1   win=True
+
+    InteractionSet
+        randomnpc3 flicker0    > killSprite scoreChange=2
+        parent0 immovable2       > stepBack
+        shootavatar2 randomnpc3  > transformTo stype=shootavatar1  scoreChange=-1
+        randomnpc1 shootavatar2      > transformTo stype=randomnpc2 scoreChange=2
+        randomnpc2 randomnpc3 > transformTo stype=randomnpc1
+        shootavatar1 randomnpc2 immovable1  > transformTo stype=shootavatar2
+        randomnpc1 randomnpc2 immovable1    > transformTo stype=randomnpc2
+        randomnpc3 immovable1    > killSprite
+
+    LevelMapping
+        1 > immovable0 randomnpc3
+        0 > immovable0 randomnpc1
+        x > immovable0 immovable1
+        A > immovable0 shootavatar1
+        e > immovable0 spawnpoint0
+        . > floor

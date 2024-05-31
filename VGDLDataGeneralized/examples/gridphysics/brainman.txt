@@ -1,0 +1,53 @@
+#BrainMan: http://www.mobygames.com/game/brainman
+
+BasicGame
+    SpriteSet
+        immovable0 > Immovable hidden=True img=newset/floor2
+        orientedavatar0 > OrientedAvatar img=oryx/prince1 rotateInPlace=false
+        immovable1 > Immovable shrinkfactor=0.7
+            immovable2 >  img=oryx/diamond3
+            immovable3 >  img=oryx/diamond2
+            immovable4 >  img=oryx/diamond1
+        passive0 > Passive img=oryx/key3 shrinkfactor=0.7
+        missile0 > Missile img=oryx/key3 shrinkfactor=0.6
+        immovable5 > Immovable img=newset/exit2
+        immovable6 > Immovable img=oryx/doorclosed1
+        passive1 > Passive img=newset/block3
+        immovable7 > Immovable img=oryx/wall3 autotiling=True
+    LevelMapping
+        A > orientedavatar0 immovable0
+        k > passive0 immovable0
+        d > immovable6 immovable0
+        e > immovable5 immovable0
+        g > immovable2 immovable0
+        r > immovable3 immovable0
+        b > immovable4  immovable0
+        O > passive1 immovable0
+        . > immovable0
+    InteractionSet
+
+        missile0 passive0 immovable7 immovable1 passive1 > transformTo stype=passive0
+
+        orientedavatar0 immovable7 immovable6 > stepBack
+        
+        passive1 orientedavatar0 > bounceForward
+        
+        passive0 orientedavatar0 > transformTo stype=missile0
+        missile0 orientedavatar0 > attractGaze
+        orientedavatar0 passive0 missile0 > stepBack
+        
+        immovable6 missile0 > killBoth scoreChange=4
+
+        immovable2 orientedavatar0 > killSprite scoreChange=1
+        immovable4 orientedavatar0 > killSprite scoreChange=2
+        immovable3 orientedavatar0 > killSprite scoreChange=5
+        
+        passive1 immovable7 passive0 immovable1 passive1 > undoAll
+        
+        passive0 immovable7 immovable1 passive0 > undoAll
+
+        immovable5 orientedavatar0 > killSprite scoreChange=10
+        
+    TerminationSet
+        SpriteCounter stype=orientedavatar0 limit=0 win=False
+        SpriteCounter stype=immovable5 limit=0 win=True

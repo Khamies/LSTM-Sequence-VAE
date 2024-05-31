@@ -1,0 +1,76 @@
+BasicGame square_size=30 key_handler=Pulse
+    SpriteSet
+        immovable0 > Immovable color=BLUE img=oryx/seaWater hidden=True
+        immovable1 > Immovable color=BLUE img=oryx/seaWater
+        immovable2 > Immovable autotiling=true img=oryx/grass hidden=True
+        immovable3  > Immovable img=oryx/bush5
+        immovable4  > Immovable color=GREEN img=oryx/doorclosed1 portal=True
+		
+        spawnpoint0 > SpawnPoint stype=missile0 prob=0.25  cooldown=10 img=oryx/seaWater
+            spawnpoint1 > stype=missile1
+            spawnpoint2 > stype=missile2
+
+        missile0    > Missile speed=0.1 color=BROWN img=oryx/bush1
+            missile1 > orientation=RIGHT
+            missile2 > orientation=LEFT
+            missile3 > speed=0.0 img=oryx/floorTileOrange
+
+
+        immovable5 > Immovable
+            immovable6 > orientation=DOWN  color=RED img=oryx/bookDown
+            immovable7 > orientation=UP  color=ORANGE img=oryx/bookUp
+            immovable8  > orientation=RIGHT color=YELLOW img=oryx/bookRight
+            immovable9  > orientation=LEFT color=YELLOW img=oryx/bookLeft
+
+        parent0 >
+            orientedavatar0 > OrientedAvatar img=oryx/vampire1
+                parent1 >
+                parent2 >
+            missileavatar0 > MissileAvatar img=oryx/bat1
+                missileavatar1  > orientation=UP color=RED
+                missileavatar2  > orientation=DOWN color=ORANGE
+                missileavatar3   > orientation=RIGHT color=YELLOW
+                missileavatar4   > orientation=LEFT color=GREEN
+
+
+    LevelMapping
+        . > immovable1
+        - > immovable0 immovable2
+        , > immovable0 immovable2 missile3
+        0 > immovable0 immovable2 immovable8
+        1 > immovable0 immovable2 immovable6
+        2 > immovable0 immovable2 immovable7
+        3 > immovable0 immovable2 immovable9
+        r > spawnpoint1 missile1
+        l > spawnpoint2 missile2
+        g > immovable0 immovable2 immovable4
+        A > immovable0 immovable2 parent1
+        w > immovable0 immovable2 immovable3
+
+    InteractionSet
+        missileavatar0 immovable3 missile0 > transformTo stype=parent1
+        orientedavatar0 immovable3 > stepBack pixelPerfect=True
+
+        parent1 missile0   > shieldFrom ftype=killSprite stype=immovable1
+        parent1 missile1 missile2   > pullWithIt
+        parent1 missile3   > pullWithIt pixelPerfect=True
+
+        missile3 parent1 > killSprite
+        missile0    immovable3   > killSprite
+
+        parent0 immovable5    > attractGaze prob=1 align=True
+        parent0 immovable9  > transformTo stype=missileavatar4
+        parent0 immovable8  > transformTo stype=missileavatar3
+        parent0 immovable6 > transformTo stype=missileavatar2
+        parent0 immovable7 > transformTo stype=missileavatar1
+
+        immovable5 parent0    > killSprite scoreChange=1
+        immovable4 parent0        > killSprite
+
+        parent1 immovable1 > killSprite
+        parent0 spawnpoint0 > stepBack
+
+    TerminationSet
+        SpriteCounter stype=immovable4    limit=0 win=True
+        SpriteCounter stype=parent0  limit=0 win=False
+        Timeout limit=1000 win=False

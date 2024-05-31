@@ -1,0 +1,64 @@
+#Bolo Adventures III: http://www.mobygames.com/game/dos/bolo-adventures-iii
+BasicGame key_handler=Pulse
+    SpriteSet
+        immovable0 > Immovable img=oryx/backLBrown hidden=True
+        immovable1   > Immovable color=DARKBLUE img=newset/hole1
+        immovable2 > Immovable img=oryx/doorclosed1
+        orientedavatar0 > OrientedAvatar rotateInPlace=false img=oryx/spelunky frameRate=8
+        passive0    > Passive img=newset/block1
+        passive1  > Passive img=newset/block2
+        missile0 > Missile img=newset/block3
+        spawnpoint0 > SpawnPoint 
+            spawnpoint1 > img=newset/lasercannon stype=missile2
+            spawnpoint2 > img=newset/lasercannon_2 stype=missile3
+            spawnpoint3 > img=newset/lasercannon_1 stype=missile4
+            spawnpoint4 > img=newset/lasercannon_3 stype=missile5
+        missile1 > Missile color=YELLOW  shrinkfactor=0.5 speed=0.1
+            missile2 > orientation=UP img=newset/laser1
+            missile3 > orientation=DOWN img=newset/laser1
+            missile4 > orientation=RIGHT img=newset/laser1_1
+            missile5 > orientation=LEFT img=newset/laser1_1
+
+        immovable3 > Immovable img=oryx/wall3 autotiling=True
+
+    LevelMapping
+        A > orientedavatar0 immovable0
+        b > passive0 immovable0
+        c > passive1 immovable0
+        l > spawnpoint4 immovable0
+        r > spawnpoint3 immovable0
+        u > spawnpoint1 immovable0
+        d > spawnpoint2 immovable0
+        0 > immovable1 immovable0
+        g > immovable2 immovable0
+        . > immovable0
+
+    InteractionSet
+
+        missile0 immovable3 passive0 passive1 spawnpoint0 > transformTo stype=passive1
+        missile0 immovable1 > killBoth scoreChange=1
+
+        orientedavatar0 immovable3 spawnpoint0 > stepBack
+        orientedavatar0 passive0 > shieldFrom ftype=killIfFrontal stype=missile1
+
+        passive0 orientedavatar0  > bounceForward
+        passive0 immovable3 passive0 immovable1 spawnpoint0   > undoAll
+        
+        orientedavatar0 immovable3 > stepBack
+        passive1 orientedavatar0  > transformTo stype=missile0
+        missile0 orientedavatar0 > attractGaze
+        orientedavatar0 passive1 missile0 > stepBack
+
+        passive1 passive0 immovable3 passive1 spawnpoint0 > undoAll
+        missile1 immovable3 passive1 missile0 passive0 immovable1 > killSprite
+        orientedavatar0 immovable1 > stepBack
+
+        orientedavatar0 missile1 > killIfFrontal
+        orientedavatar0 missile1 > killIfNotFrontal
+
+        
+        immovable2 orientedavatar0 > killSprite scoreChange=5
+
+    TerminationSet
+        SpriteCounter stype=orientedavatar0    limit=0 win=False
+        SpriteCounter stype=immovable2    limit=0 win=True

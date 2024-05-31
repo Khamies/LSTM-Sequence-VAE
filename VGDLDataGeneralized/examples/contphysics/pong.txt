@@ -1,0 +1,35 @@
+BasicGame
+    SpriteSet
+        immovable0 > Immovable color=GREEN
+            parent0 > 
+            parent1    >
+            parent2      > color=RED
+            parent3 > color=RED
+
+        parent4 >  speed=0.25 hMult=3
+            verticalavatar0      > VerticalAvatar alternate_keys=True img=oryx/floor3
+            passive0 > Passive color=BLUE img=oryx/floor2
+
+        missile0 > Missile orientation=LEFT physicstype=CONT img=oryx/bullet1 shrinkfactor=4
+            missile1 > speed=25
+            missile2 > speed=15
+
+    TerminationSet
+
+        SpriteCounter stype=parent0 limit=0 win=True
+        SpriteCounter stype=parent1 limit=0 win=False
+           
+    InteractionSet
+        parent0 missile0 > transformToAll stype=parent0 stypeTo=parent2
+        parent1 missile0   > transformToAll stype=parent1 stypeTo=parent3
+
+        missile0 parent4 > bounceDirection
+        missile0 wall   > wallBounce
+        parent4 wall > stepBack
+        
+    LevelMapping
+        + > parent1
+        - > parent0
+        a > passive0
+        o > missile1
+        s > slowBall

@@ -1,0 +1,46 @@
+BasicGame
+    SpriteSet    
+        flakavatar0 > FlakAvatar stype=missile0 physicstype=CONT friction=0.02 img=oryx/spider3
+        missile0 > Missile speed=25 singleton=True orientation=DUP physicstype=CONT img=oryx/bullet1
+        missile1 > Missile physicstype=CONT gravity=0.5
+        	missile2 > speed=4 shrinkfactor=1.2 img=oryx/orb1
+        		missile3 > orientation=DLEFT
+        		missile4 > orientation=DRIGHT
+        	parent0 > speed=7 img=oryx/orb2
+        		parent1 > orientation=DLEFT
+        		parent2 > orientation=DRIGHT
+        	parent3 > speed=10 shrinkfactor=0.8 img=oryx/orb3
+        		parent4 > orientation=DLEFT
+        		parent5 > orientation=DRIGHT
+            
+    TerminationSet
+        SpriteCounter stype=missile1    win=True
+        SpriteCounter stype=flakavatar0 win=False
+           
+    InteractionSet
+        missile0 wall > killSprite 
+        missile1 missile0 > killSprite
+        
+        missile0 parent3 > killSprite scoreChange=1
+        
+        missile0 parent0 > spawn stype=parent4
+        missile0 parent0 > spawn stype=parent5
+        missile0 parent0 > killSprite scoreChange=1
+        
+        missile0 missile2 > spawn stype=parent1
+        missile0 missile2 > spawn stype=parent2
+        missile0 missile2 > killSprite scoreChange=1
+        
+        flakavatar0 wall > wallStop
+        flakavatar0 EOS > stepBack
+        missile0 EOS > killSprite
+        missile1 wall > wallBounce
+        flakavatar0 missile1 > killSprite 
+
+    LevelMapping
+        b > missile3
+        c > missile4
+        d > parent1
+        e > parent2
+        f > parent4
+        g > bubble3b

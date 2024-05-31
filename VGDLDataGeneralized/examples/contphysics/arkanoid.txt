@@ -1,0 +1,47 @@
+BasicGame square_size=25
+
+    SpriteSet
+        immovable0 > Immovable img=oryx/space1 hidden=True
+        flakavatar0 > FlakAvatar stype=parent0 physicstype=CONT wMult=4 friction=0.2 mass=0.2 img=oryx/floor3 healthPoints=3 limitHealthPoints=3
+
+        missile0 > Missile orientation=UP speed=20 physicstype=CONT img=oryx/bullet2 shrinkfactor=2 singleton=True
+            parent0 >
+            parent1 >
+
+        passive0 > Passive invisible=True hidden=True
+
+        passive1 > Passive img=newset/blockG
+            passive2 > wMult=2
+            parent2 >
+
+        passive3 > Passive img=newset/block2
+            passive4 > wMult=2
+            parent3 >
+
+
+    TerminationSet
+        SpriteCounter stype=flakavatar0 limit=0 win=False
+        SpriteCounter stype=passive1 limit=0 win=True
+           
+    InteractionSet
+
+        parent0 passive1 passive3 > transformToAll stype=parent0 stypeTo=parent1
+
+        passive1 parent1 > killSprite scoreChange=2
+
+        parent1 flakavatar0 > bounceDirection
+        parent1 passive3 > wallBounce
+        flakavatar0 passive3 > wallStop
+
+        parent1 EOS > subtractHealthPoints stype=flakavatar0 value=1
+        parent1 EOS > transformTo stype=passive0
+        parent1 passive1 > wallBounce
+
+    LevelMapping
+        . > immovable0
+        o > immovable0 parent1
+        m > immovable0 passive2
+        n > immovable0 parent2
+        b > immovable0 passive4
+        w > immovable0 parent3
+        A > immovable0 avatar

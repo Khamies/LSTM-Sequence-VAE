@@ -1,0 +1,40 @@
+BasicGame
+  SpriteSet
+    immovable0 > Immovable randomtiling=0.9 img=oryx/floor3 hidden=True
+    door0  > Door color=GREEN img=oryx/doorclosed1
+    immovable1   > Immovable color=ORANGE img=oryx/key2
+    orientedflicker0 > OrientedFlicker limit=5 singleton=True img=oryx/slash1
+    parent0 >
+      shootavatar0  > ShootAvatar   stype=orientedflicker0 frameRate=8
+        shootavatar1   > img=oryx/swordman1
+        shootavatar2 > color=ORANGE img=oryx/swordmankey1
+      parent1 >  
+        randomnpc0 > RandomNPC cooldown=2 cons=6 img=oryx/bat1
+        randomnpc1 > RandomNPC cooldown=4 cons=8 img=oryx/spider2
+        randomnpc2 > RandomNPC cooldown=8 cons=12 img=oryx/scorpion1
+      immovable2 > Immovable autotiling=true img=oryx/wall3
+      	
+
+  LevelMapping
+    g > immovable0 door0
+    + > immovable0 immovable1        
+    A > immovable0 shootavatar1
+    1 > immovable0 randomnpc0
+    2 > immovable0 randomnpc1
+    3 > immovable0 randomnpc2
+    w > immovable2
+    . > immovable0
+    
+
+  InteractionSet
+    parent0 immovable2  > stepBack
+    shootavatar1 door0    > stepBack
+    door0 shootavatar2  > killSprite scoreChange=1
+    parent1 orientedflicker0 > killSprite scoreChange=2
+    parent1 enemy > stepBack
+    shootavatar0 parent1 > killSprite scoreChange=-1
+    shootavatar1 immovable1     > transformTo stype=shootavatar2 scoreChange=1 killSecond=True
+
+  TerminationSet
+    SpriteCounter stype=door0   win=True
+    SpriteCounter stype=shootavatar0 win=False

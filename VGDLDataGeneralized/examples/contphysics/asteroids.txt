@@ -1,0 +1,23 @@
+BasicGame
+    SpriteSet    
+        immovable0    > Immovable img=oryx/alien1
+        spaceshipavatar0 > SpaceshipAvatar stype=missile0 physicstype=CONT img=oryx/spaceship3
+        missile0 > Missile physicstype=CONT speed=25 singleton=True img=oryx/bullet2
+        immovable1 > Immovable img=oryx/backOrange
+            
+    TerminationSet
+        SpriteCounter stype=immovable0    win=True
+        SpriteCounter stype=spaceshipavatar0 win=False
+           
+    InteractionSet
+        missile0 wall > killSprite
+        missile0 immovable1 > killSprite
+        immovable1 missile0 > killSprite
+        immovable0 missile0 > killSprite scoreChange=1
+        spaceshipavatar0 wall > killSprite
+        spaceshipavatar0 immovable1 > killSprite
+        spaceshipavatar0 immovable0 > killSprite
+
+    LevelMapping
+        G > immovable0
+        b > breakable

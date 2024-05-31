@@ -1,0 +1,66 @@
+BasicGame
+    SpriteSet
+        immovable0 > Immovable img=oryx/backBiege hidden=True
+        immovable1 > Immovable color=GREEN img=oryx/king1
+        immovable2 > Immovable img=oryx/space5
+        immovable3 > Immovable img=oryx/tombstone1
+
+        immovable4 > Immovable
+            immovable5 > img=oryx/bookUp
+            immovable6 > img=oryx/bookRight
+            immovable7 > img=oryx/bookDown
+            immovable8 > img=oryx/bookLeft
+
+        passive0 > Passive
+            passive1 > img=oryx/bookUp orientation=UP
+            passive2 > img=oryx/bookRight orientation=RIGHT
+            passive3 > img=oryx/bookDown orientation=DOWN
+            passive4 > img=oryx/bookLeft orientation=LEFT
+
+        missile0 > Missile orientation=RIGHT speed=0.25 img=oryx/treasure2
+        movingavatar0 > MovingAvatar speed=1.0 img=newset/man4 rotateInPlace=False
+        immovable9 > Immovable img=oryx/dirtWall autotiling=True
+
+    InteractionSet
+
+        movingavatar0 immovable5 > transformToAll stype=passive2 stypeTo=passive1
+        movingavatar0 immovable5 > transformToAll stype=passive3 stypeTo=passive1
+        movingavatar0 immovable5 > transformToAll stype=passive4 stypeTo=passive1
+
+        movingavatar0 immovable6 > transformToAll stype=passive1 stypeTo=passive2
+        movingavatar0 immovable6 > transformToAll stype=passive3 stypeTo=passive2
+        movingavatar0 immovable6 > transformToAll stype=passive4 stypeTo=passive2
+
+        movingavatar0 immovable7 > transformToAll stype=passive1 stypeTo=passive3
+        movingavatar0 immovable7 > transformToAll stype=passive2 stypeTo=passive3
+        movingavatar0 immovable7 > transformToAll stype=passive4 stypeTo=passive3
+
+        movingavatar0 immovable8 > transformToAll stype=passive1 stypeTo=passive4
+        movingavatar0 immovable8 > transformToAll stype=passive3 stypeTo=passive4
+        movingavatar0 immovable8 > transformToAll stype=passive2 stypeTo=passive4
+
+        missile0 passive0 > attractGaze align=True
+        immovable1 missile0 > killSprite scoreChange=1
+        missile0 immovable3 > killSprite scoreChange=-1
+        missile0 immovable9 > killSprite scoreChange=-1
+        missile0 immovable0 > stepBack
+
+        movingavatar0 immovable9 > stepBack
+
+    LevelMapping
+        A > movingavatar0 immovable0
+        . > immovable0
+        1 > immovable5 immovable0
+        2 > immovable6 immovable0
+        3 > immovable7 immovable0
+        4 > immovable8 immovable0
+        p > immovable0 immovable1
+        s > immovable2 missile0
+        b > immovable2
+        d > immovable0 immovable3
+        j > passive2 immovable2
+
+
+    TerminationSet
+        SpriteCounter stype=immovable1 win=True
+        SpriteCounter stype=missile0 win=False

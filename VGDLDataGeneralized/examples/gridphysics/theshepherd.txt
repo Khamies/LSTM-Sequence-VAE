@@ -1,0 +1,56 @@
+BasicGame obs=wall,fence
+    SpriteSet
+        immovable0 > Immovable hidden=True img=oryx/grass autotiling=True
+        parent0 >
+            parent1 >
+                fleeing0 > Fleeing speed=1.0 stype=shootavatar0 color=BLUE img=oryx/bird1
+                pathchaser0 > PathChaser speed=1.0 stype=immovable3 img=oryx/bird1
+            randomnpc0 > RandomNPC speed=0.1 cons=2 img=oryx/bird2
+            immovable1 > Immovable hidden=True invisible=True
+        shootavatar0 > ShootAvatar stype=immovable2 ammo=resource0 img=oryx/princess1
+        shootavatar1 > img=oryx/wolf1
+            pathchaser1 > PathChaser stype=immovable2
+            pathchaser2 > PathChaser stype=fleeing0
+        immovable2 > Immovable img=oryx/belt2 shrinkfactor=0.5 singleton=True
+        resource0 > Resource value=1 limit=1 img=oryx/belt2 color=BROWN
+        immovable3 > Immovable invisible=True hidden=True
+        door0 > Door img=oryx/dooropen1
+        immovable4 > Immovable img=oryx/spike2
+        immovable5 > Immovable img=oryx/tree2
+
+    InteractionSet
+        parent0 immovable5 immovable4 > stepBack
+        parent1 notamed > stepBack
+        shootavatar0 immovable5 immovable4 > stepBack
+        shootavatar1 immovable5 immovable4 > stepBack
+        randomnpc0 shootavatar0 > bounceForward
+        immovable2 shootavatar0 > bounceForward
+        immovable2 immovable5 immovable4 > killSprite
+
+        pathchaser1 immovable2 > transformTo stype=pathchaser2 killSecond=True #dog helps after eating a treat
+
+        #sheep runs to pen if caught by helpful dog, shootavatar1 becomes pathchaser1 again
+        fleeing0 pathchaser2 > transformTo stype=immovable1
+        pathchaser2 immovable1 > transformTo stype=pathchaser1
+        immovable1 pathchaser1 > transformTo stype=pathchaser0
+
+        randomnpc0 door0 > stepBack
+        parent0 immovable4 > stepBack
+        fleeing0 immovable3  > transformTo stype=randomnpc0 scoreChange=5
+        pathchaser0 immovable3 > transformTo stype=randomnpc0 scoreChange=1
+
+        resource0 shootavatar0 > collectResource killResource=False
+
+    LevelMapping
+        0 > fleeing0 immovable0
+        . > immovable0
+        A > immovable0 shootavatar0
+        d > pathchaser1 immovable0
+        e > immovable3 immovable0
+        + > door0 immovable0
+        f > immovable4 immovable0
+        t > resource0 immovable0
+        w > immovable0 immovable5
+
+    TerminationSet
+        SpriteCounter stype=parent1 win=True
